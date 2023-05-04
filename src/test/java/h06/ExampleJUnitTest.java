@@ -1,4 +1,4 @@
-package h_id_;
+package h06;
 
 import org.junit.jupiter.api.Test;
 
