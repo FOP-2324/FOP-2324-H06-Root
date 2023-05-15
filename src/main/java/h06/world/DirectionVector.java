@@ -36,6 +36,7 @@ public enum DirectionVector {
      */
     private final int dx;
 
+
     /**
      * The y component of the direction vector.
      */
@@ -43,6 +44,8 @@ public enum DirectionVector {
 
     /**
      * Constructs a new direction vector with the given x and y components.
+     * <p>
+     * <<<<<<< HEAD
      *
      * @param dx the x component of the direction vector
      * @param dy the y component of the direction vector
