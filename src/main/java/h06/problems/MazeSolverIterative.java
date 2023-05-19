@@ -13,6 +13,12 @@ import java.awt.Point;
  */
 public class MazeSolverIterative implements MazeSolver {
 
+    /**
+     * Constructs an iterative maze solver.
+     */
+    public MazeSolverIterative() {
+    }
+
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
         DirectionVector next = d.left();

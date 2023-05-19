@@ -13,6 +13,12 @@ import java.awt.Point;
  */
 public class MazeSolverRecursive implements MazeSolver {
 
+    /**
+     * Constructs a recursive maze solver.
+     */
+    public MazeSolverRecursive() {
+    }
+
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
         return !world.isBlocked(p, d) ? d : nextStep(world, p, d.right());
