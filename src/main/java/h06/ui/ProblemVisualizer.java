@@ -27,6 +27,13 @@ public interface ProblemVisualizer {
     void show(boolean visible);
 
     /**
+     * Shows the visualizer.
+     */
+    default void show() {
+        show(true);
+    }
+
+    /**
      * Runs the visualizer with the given solver and start and end points to solve the problem.
      *
      * @param solver the solver to use

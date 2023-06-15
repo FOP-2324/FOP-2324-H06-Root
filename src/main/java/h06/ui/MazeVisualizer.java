@@ -6,6 +6,7 @@ import h06.problems.ProblemSolver;
 import h06.world.DirectionVector;
 import h06.world.World;
 
+import java.awt.Color;
 import java.awt.Point;
 
 /**
@@ -50,6 +51,8 @@ public class MazeVisualizer implements ProblemVisualizer {
         Point[] path = solver.solve(world, s, e, DirectionVector.UP);
         Robot robot = new Robot(s.x, s.y);
 
+        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
+        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.YELLOW);
         for (int i = 1; i < path.length; i++) {
             Point p = path[i];
             int x = robot.getX();
