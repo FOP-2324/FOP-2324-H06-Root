@@ -21,35 +21,34 @@ public class MazeSolverRecursive implements MazeSolver {
 
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
-        return !world.isBlocked(p, d) ? d : nextStep(world, p, d.right());
+        return !world.isBlocked(p, d) ? d : nextStep(world, p, d.rotate90());
     }
 
     @Override
-    public int numberOfSteps(World world, Point s, Point e) {
-        return numberOfStepsHelper(world, s, e, DirectionVector.UP);
+    public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
+        return numberOfStepsHelper(world, s, e, d);
     }
 
     /**
      * Helper method for numberOfSteps. Returns the number of steps from p to end.
      *
      * @param world the world to solve the maze in
-     * @param p     the current point
-     * @param end   the end point
+     * @param s     the current point
+     * @param e     the end point
      * @param d     the current direction
      * @return the number of steps from p to end
      */
-    private int numberOfStepsHelper(World world, Point p, Point end, DirectionVector d) {
-        if (p.equals(end)) {
+    private int numberOfStepsHelper(World world, Point s, Point e, DirectionVector d) {
+        if (s.equals(e)) {
             return 1;
         }
-
-        DirectionVector next = nextStep(world, p, d.left());
-        return 1 + numberOfStepsHelper(world, next.plus(p), end, next);
+        DirectionVector next = nextStep(world, s, d.rotate270());
+        return 1 + numberOfStepsHelper(world, next.getMovement(s), e, next);
     }
 
     @Override
     public Point[] solve(World world, Point s, Point e, DirectionVector d) {
-        int size = numberOfSteps(world, s, e);
+        int size = numberOfSteps(world, s, e, d);
         Point[] path = new Point[size];
         solveHelper(world, s, e, d, path, 0);
         return path;
@@ -71,7 +70,7 @@ public class MazeSolverRecursive implements MazeSolver {
             return;
         }
         path[index++] = p;
-        DirectionVector next = nextStep(world, p, d.left());
-        solveHelper(world, next.plus(p), e, next, path, index);
+        DirectionVector next = nextStep(world, p, d.rotate270());
+        solveHelper(world, next.getMovement(p), e, next, path, index);
     }
 }

@@ -12,7 +12,6 @@ import java.awt.Point;
  */
 public interface ProblemSolver {
 
-
     /**
      * Computes the next step of solving the problem.
      *
@@ -29,9 +28,10 @@ public interface ProblemSolver {
      * @param world the world to solve the problem in
      * @param s     the start position
      * @param e     the end position
+     * @param d     the starting direction
      * @return the number of steps needed to solve the problem
      */
-    int numberOfSteps(World world, Point s, Point e);
+    int numberOfSteps(World world, Point s, Point e, DirectionVector d);
 
     /**
      * Computes the path to solve the problem.

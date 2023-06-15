@@ -21,25 +21,25 @@ public class MazeSolverIterative implements MazeSolver {
 
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
-        DirectionVector next = d.left();
+        DirectionVector next = d.rotate270();
         for (int i = 0; i < DirectionVector.values().length; i++) {
             if (!world.isBlocked(p, next)) {
                 return next;
             }
 
-            next = next.right();
+            next = next.rotate90();
         }
         return d;
     }
 
     @Override
-    public int numberOfSteps(World world, Point s, Point e) {
+    public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
         int steps = 0;
         Point next = s;
-        DirectionVector d = DirectionVector.UP;
+        DirectionVector nextDir = d;
         while (!next.equals(e)) {
-            d = nextStep(world, next, d);
-            next = d.plus(next);
+            nextDir = nextStep(world, next, nextDir);
+            next = nextDir.getMovement(next);
             steps++;
         }
         steps++;
@@ -48,7 +48,7 @@ public class MazeSolverIterative implements MazeSolver {
 
     @Override
     public Point[] solve(World world, Point s, Point e, DirectionVector d) {
-        int size = numberOfSteps(world, s, e);
+        int size = numberOfSteps(world, s, e, d);
         Point[] path = new Point[size];
         int index = 0;
         Point next = s;
@@ -56,7 +56,7 @@ public class MazeSolverIterative implements MazeSolver {
         while (!next.equals(e)) {
             path[index++] = next;
             dir = nextStep(world, next, dir);
-            next = dir.plus(next);
+            next = dir.getMovement(next);
         }
         path[index] = next;
         return path;
