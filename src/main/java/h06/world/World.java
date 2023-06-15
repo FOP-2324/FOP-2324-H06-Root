@@ -92,7 +92,7 @@ public class World {
      * @return {@code true} if the position is outside the world, {@code false} otherwise
      */
     public boolean isOutside(Point p, DirectionVector d) {
-        Point pos = d.plus(p);
+        Point pos = d.getMovement(p);
         return isOutside(pos.x, pos.y);
     }
 
@@ -127,13 +127,16 @@ public class World {
      * @return {@code true} if the position is blocked, {@code false} otherwise
      */
     public boolean isBlocked(Point p, DirectionVector d) {
+        // Outside
         if (isOutside(p, d)) {
             return true;
         }
-        Point r = d.plus(p);
+        Point r = d.getMovement(p);
         int x;
         int y;
         boolean horizontal;
+        // 1 point for vertical
+        // 1 point for special case
         if (p.x > r.x) {
             // Right, vertical check
             x = r.x;

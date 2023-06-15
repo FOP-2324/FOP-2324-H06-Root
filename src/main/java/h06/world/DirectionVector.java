@@ -34,12 +34,12 @@ public enum DirectionVector {
     /**
      * The x component of the direction vector.
      */
-    private final int x;
+    private final int dx;
 
     /**
      * The y component of the direction vector.
      */
-    private final int y;
+    private final int dy;
 
     /**
      * Constructs a new direction vector with the given x and y components.
@@ -48,8 +48,8 @@ public enum DirectionVector {
      * @param y the y component of the direction vector
      */
     DirectionVector(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.dx = x;
+        this.dy = y;
     }
 
     /**
@@ -57,8 +57,9 @@ public enum DirectionVector {
      *
      * @return the direction vector counterclockwise to this direction vector
      */
-    public DirectionVector left() {
-        return values()[(ordinal() + values().length - 1) % values().length];
+    public DirectionVector rotate270() {
+        // 1 point
+        return this == UP ? LEFT : this == LEFT ? DOWN : this == DOWN ? RIGHT : UP;
     }
 
     /**
@@ -66,8 +67,17 @@ public enum DirectionVector {
      *
      * @return the direction vector clockwise to this direction vector
      */
-    public DirectionVector right() {
-        return values()[(ordinal() + 1) % values().length];
+    public DirectionVector rotate90() {
+        // 1 point
+        if (this == UP) {
+            return RIGHT;
+        } else if (this == RIGHT) {
+            return DOWN;
+        } else if (this == DOWN) {
+            return LEFT;
+        } else {
+            return UP;
+        }
     }
 
     /**
@@ -75,8 +85,8 @@ public enum DirectionVector {
      *
      * @return the x component of the direction vector
      */
-    public int getX() {
-        return x;
+    public int getDx() {
+        return dx;
     }
 
     /**
@@ -84,8 +94,8 @@ public enum DirectionVector {
      *
      * @return the y component of the direction vector
      */
-    public int getY() {
-        return y;
+    public int getDy() {
+        return dy;
     }
 
     /**
@@ -94,7 +104,7 @@ public enum DirectionVector {
      * @param p The Point to add to.
      * @return a point that is the result of adding this direction vector to the given point
      */
-    public Point plus(Point p) {
-        return new Point(p.x + x, p.y + y);
+    public Point getMovement(Point p) {
+        return new Point(p.x + dx, p.y + dy);
     }
 }
