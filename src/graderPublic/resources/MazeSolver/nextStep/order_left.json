@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "height": 3,
+    "width": 3,
+    "horizontal": [],
+    "vertical": []
+  },
+  "p": {
+    "x": 1,
+    "y": 1
+  },
+  "d": "UP",
+  "expected": "LEFT"
+}
