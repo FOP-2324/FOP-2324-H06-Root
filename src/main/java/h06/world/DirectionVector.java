@@ -36,7 +36,6 @@ public enum DirectionVector {
      */
     private final int dx;
 
-
     /**
      * The y component of the direction vector.
      */
