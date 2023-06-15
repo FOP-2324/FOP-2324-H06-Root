@@ -7,7 +7,14 @@ import h06.world.DirectionVector;
 
 import java.io.IOException;
 
+
+/**
+ * A deserializer for {@link DirectionVector}s.
+ *
+ * @author Nhan Huynh
+ */
 public class DirectionVectorDeserializer extends JsonDeserializer<DirectionVector> {
+
     @Override
     public DirectionVector deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String value = p.getText();

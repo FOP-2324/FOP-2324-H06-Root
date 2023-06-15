@@ -10,8 +10,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.awt.Point;
 import java.io.IOException;
 
+/**
+ * A deserializer for {@link Point} array.
+ *
+ * @author Nhan Huynh
+ */
 public class PointArrayDeserializer extends JsonDeserializer<Point[]> {
 
+    @Override
     public Point[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         ObjectCodec mapper = p.getCodec();
         ArrayNode arrayNode = mapper.readTree(p);

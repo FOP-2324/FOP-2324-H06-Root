@@ -38,23 +38,54 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertF
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertTrue;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.contextBuilder;
 
+/**
+ * Defines unit tests for {@link MazeSolverRecursive}.
+ *
+ * @author Nhan Huynh
+ */
 @DisplayName("H3 | MazeSolverRecursive")
 public class H3_MazeSolverRecursiveTest {
 
+    /**
+     * The {@link MazeSolver} to test.
+     */
     private final MazeSolver solver = new MazeSolverIterative();
 
+    /**
+     * The {@link TypeLink} to {@link MazeSolverRecursive} used for context information.
+     *
+     * @return the {@link TypeLink} to {@link MazeSolverRecursive}.
+     */
     private TypeLink getType() {
         return getTypeLink(Package.PROBLEMS, MazeSolverRecursive.class);
     }
 
+    /**
+     * The {@link MethodLink} to a {@link MazeSolverRecursive} method used for context information.
+     *
+     * @param name the name of the method.
+     * @return the {@link MethodLink} to a {@link MazeSolverRecursive} method.
+     */
     private MethodLink getMethod(String name) {
         return getMethodLink(Package.PROBLEMS, getType().reflection(), name);
     }
 
+    /**
+     * Defines unit tests for {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)}.
+     */
     @Nested
     @DisplayName("nextStep(World, Point, DirectionVector)")
     public class NextStepTest {
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly.
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         private void assertNextStep(WorldProperties properties, Point p, DirectionVector d, DirectionVector expected) {
             MethodLink method = getMethod("nextStep");
             World world = properties.createWorld();
@@ -69,11 +100,20 @@ public class H3_MazeSolverRecursiveTest {
 
             assertEquals(
                 expected, actual, context,
-                result -> "MazeSolverRecursive#nextStep(%s, %s, %s) should return %s, but was %s"
+                result -> "MazeSolverRecursive#nextStep(%s, %s, %s) should return %s, but was %s."
                     .formatted(world, p, d, expected, actual)
             );
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for simple inputs. (Only top and down)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("06 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
@@ -89,6 +129,15 @@ public class H3_MazeSolverRecursiveTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for simple inputs. (Only left and right)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("07 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
@@ -104,6 +153,15 @@ public class H3_MazeSolverRecursiveTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for complex inputs. (Only top and down)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("08 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
@@ -119,6 +177,15 @@ public class H3_MazeSolverRecursiveTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for complex inputs. (Only left and right)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("09 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
@@ -135,18 +202,35 @@ public class H3_MazeSolverRecursiveTest {
         }
     }
 
+    /**
+     * Defines unit tests for the method {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)}.
+     */
     @Nested
     @DisplayName("numberOfSteps(World, Point, Point, Direction)")
     public class NumberOfStepsTest {
 
+        /**
+         * Returns the method for context information.
+         *
+         * @return the method for context information
+         */
         private BasicMethodLink getMethod() {
             return (BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfSteps");
         }
 
+        /**
+         * Returns the helper method for context information.
+         *
+         * @return the helper method for context information
+         */
         private BasicMethodLink getHelperMethod() {
             return (BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfStepsHelper");
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} calls
+         * the helper method.
+         */
         @DisplayName("10 | numberOfSteps(World, Point, Point, Direction) soll die Aufgabe an numberOfStepsHelper "
             + "delegieren.")
         @Test
@@ -171,6 +255,10 @@ public class H3_MazeSolverRecursiveTest {
                     .formatted(found));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} computes
+         * the number of steps.
+         */
         @DisplayName("11 | numberOfStepsHelper(World, Point, Point, Direction) berechnet die Anzahl der Schritte im "
             + "Rekursionsschritt.")
         @Test
@@ -203,6 +291,10 @@ public class H3_MazeSolverRecursiveTest {
             }
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} contains
+         * a variable that keeps track of the number of steps.
+         */
         @DisplayName("12 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
             + "bisherigen berechneten Schritte merkt.")
         @Test
@@ -227,6 +319,16 @@ public class H3_MazeSolverRecursiveTest {
                     + "found %s.".formatted(found.size()));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         private void assertNumberOfSteps(WorldProperties properties, Point s, Point e, DirectionVector d, int expected) {
             MethodLink method = getMethod();
             World world = properties.createWorld();
@@ -241,11 +343,21 @@ public class H3_MazeSolverRecursiveTest {
 
             assertEquals(
                 expected, actual, context,
-                result -> "MazeSolverIterative#numberOfSteps(%s, %s, %s, %s) should return %s, but was %s"
+                result -> "MazeSolverIterative#numberOfSteps(%s, %s, %s, %s) should return %s, but was %s."
                     .formatted(world, s, e, d, expected, actual)
             );
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("13 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
             + "zurück, wenn Start- und Endpunkt gleich sind.")
@@ -262,6 +374,16 @@ public class H3_MazeSolverRecursiveTest {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("14 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
             + "der Pfad nur aus Start- und Endpunt besteht.")
@@ -278,6 +400,16 @@ public class H3_MazeSolverRecursiveTest {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("15 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
             + "Pfade zurück.")
@@ -299,18 +431,29 @@ public class H3_MazeSolverRecursiveTest {
 
     }
 
+    /**
+     * Defines unit tests for {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)}.
+     */
     @Nested
     @DisplayName("solve(World, Point, Point, Direction)")
     public class SolveTest {
 
+        /**
+         * Returns the method for context information.
+         *
+         * @return the method
+         */
         private BasicMethodLink getMethod() {
             return (BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("solve");
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * number of steps.
+         */
         @DisplayName("16 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
             + "speichert dies entsprechend ab.")
         @Test
-
         public void testComputeArraySize() {
             BasicMethodLink method = getMethod();
             List<? extends CtExecutableReference<?>> calls = method.getCtElement()
@@ -328,10 +471,20 @@ public class H3_MazeSolverRecursiveTest {
                 .build();
             assertFalse(
                 found.isEmpty(), context,
-                result -> "solve(World, Point, Point, Direction) should at least call numberOfSteps once, found %s"
+                result -> "solve(World, Point, Point, Direction) should at least call numberOfSteps once, found %s."
                     .formatted(found.size()));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * array size.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("17 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
             + "Schritte entspricht.")
@@ -364,13 +517,23 @@ public class H3_MazeSolverRecursiveTest {
                 .build();
 
             assertEquals(expected.length, actual.length, context,
-                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should return an array of size %s, but was %s"
+                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should return an array of size %s, but was %s."
                     .formatted(world, s, e, d, expected.length, actual.length));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * start point.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("18 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
-            + "korrekt enthält.")
+        @DisplayName("18 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Startpunkt korrekt "
+            + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
             "MazeSolver/solve/path_complex2.json",
@@ -401,13 +564,23 @@ public class H3_MazeSolverRecursiveTest {
                 .build();
 
             assertEquals(expected[0], actual[0], context,
-                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the start point %s, but was %s"
+                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the start point %s, but was %s."
                     .formatted(world, s, e, d, expected[0], actual[0]));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * end point.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("19 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
-            + "korrekt enthält.")
+        @DisplayName("19 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Endpunkt korrekt "
+            + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
             "MazeSolver/solve/path_complex2.json",
@@ -438,10 +611,20 @@ public class H3_MazeSolverRecursiveTest {
                 .build();
 
             assertEquals(expected[expected.length - 1], actual[actual.length - 1], context,
-                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the end point %s, but was %s"
+                result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the end point %s, but was %s."
                     .formatted(world, s, e, d, expected[expected.length - 1], actual[actual.length - 1]));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * points.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("20 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
             + "korrekt enthält. (Ausgenommen Start- und Endpunkt)")
@@ -479,7 +662,7 @@ public class H3_MazeSolverRecursiveTest {
                     .build();
                 int index = i;
                 assertEquals(expected[i], actual[i], context,
-                    result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the point %s at %s, but was %s"
+                    result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the point %s at %s, but was %s."
                         .formatted(world, s, e, d, expected[index], index, actual[index]));
             }
         }

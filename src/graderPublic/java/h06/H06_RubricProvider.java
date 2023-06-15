@@ -5,8 +5,16 @@ import org.sourcegrade.jagr.api.rubric.RubricProvider;
 
 import static h06.TutorUtils.criterion;
 
+/**
+ * Defines the rubrics for H06.
+ *
+ * @author Nhan Huynh
+ */
 public class H06_RubricProvider implements RubricProvider {
 
+    /**
+     * The rubric for H06.
+     */
     public static final Rubric RUBRIC = Rubric.builder()
         .title("H06")
         .addChildCriteria(

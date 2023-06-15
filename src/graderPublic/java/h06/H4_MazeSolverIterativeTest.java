@@ -3,6 +3,7 @@ package h06;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import h06.problems.MazeSolver;
 import h06.problems.MazeSolverIterative;
+import h06.problems.MazeSolverRecursive;
 import h06.world.DirectionVector;
 import h06.world.World;
 import org.junit.jupiter.api.DisplayName;
@@ -33,24 +34,53 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertE
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertFalse;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.contextBuilder;
 
+/**
+ * Defines unit tests for {@link MazeSolverIterative}.
+ */
 @DisplayName("H4 | MazeSolverIterative")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class H4_MazeSolverIterativeTest {
 
+    /**
+     * The {@link MazeSolver} to test.
+     */
     private final MazeSolver solver = new MazeSolverIterative();
 
+    /**
+     * The {@link TypeLink} to {@link MazeSolverRecursive} used for context information.
+     *
+     * @return the {@link TypeLink} to {@link MazeSolverRecursive}.
+     */
     private TypeLink getType() {
         return getTypeLink(Package.PROBLEMS, MazeSolverIterative.class);
     }
 
+    /**
+     * The {@link MethodLink} to a {@link MazeSolverRecursive} method used for context information.
+     *
+     * @param name the name of the method.
+     * @return the {@link MethodLink} to a {@link MazeSolverRecursive} method.
+     */
     private MethodLink getMethod(String name) {
         return getMethodLink(Package.PROBLEMS, getType().reflection(), name);
     }
 
+    /**
+     * Defines unit tests for {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)}.
+     */
     @Nested
     @DisplayName("nextStep(World, Point, DirectionVector)")
     public class NextStepTest {
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly.
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         private void assertNextStep(WorldProperties properties, Point p, DirectionVector d, DirectionVector expected) {
             MethodLink method = getMethod("nextStep");
             World world = properties.createWorld();
@@ -65,11 +95,20 @@ public class H4_MazeSolverIterativeTest {
 
             assertEquals(
                 expected, actual, context,
-                result -> "MazeSolverIterative#nextStep(%s, %s, %s) should return %s, but was %s"
+                result -> "MazeSolverRecursive#nextStep(%s, %s, %s) should return %s, but was %s."
                     .formatted(world, p, d, expected, actual)
             );
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for simple inputs. (Only top and down)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("20 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
@@ -85,6 +124,15 @@ public class H4_MazeSolverIterativeTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for simple inputs. (Only left and right)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("21 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
@@ -100,6 +148,15 @@ public class H4_MazeSolverIterativeTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for complex inputs. (Only top and down)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("22 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
@@ -115,6 +172,15 @@ public class H4_MazeSolverIterativeTest {
             assertNextStep(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)} computes the next step
+         * correctly for complex inputs. (Only left and right)
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction to test
+         * @param expected   the expected result
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("23 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
@@ -135,10 +201,19 @@ public class H4_MazeSolverIterativeTest {
     @DisplayName("numberOfSteps(World, Point, Point, Direction)")
     public class NumberOfStepsTest {
 
+        /**
+         * Returns the method for context information.
+         *
+         * @return the method for context information
+         */
         private BasicMethodLink getMethod() {
             return (BasicMethodLink) H4_MazeSolverIterativeTest.this.getMethod("numberOfSteps");
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} computes
+         * the number of steps.
+         */
         @DisplayName("24 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
             + "bisherigen berechneten Schritte merkt.")
         @Test
@@ -159,6 +234,16 @@ public class H4_MazeSolverIterativeTest {
                     + "for computing the total number of steps, found %s".formatted(found.size()));
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         private void assertNumberOfSteps(
             WorldProperties properties,
             Point s,
@@ -184,6 +269,16 @@ public class H4_MazeSolverIterativeTest {
             );
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("26 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
             + "zurück, wenn Start- und Endpunkt gleich sind.")
@@ -200,6 +295,16 @@ public class H4_MazeSolverIterativeTest {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("27 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
             + "der Pfad nur aus Start- und Endpunt besteht.")
@@ -216,6 +321,16 @@ public class H4_MazeSolverIterativeTest {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} returns the
+         * correct number of steps.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param expected   the expected number of steps
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("28 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
             + "Pfade zurück.")
@@ -235,14 +350,26 @@ public class H4_MazeSolverIterativeTest {
         }
     }
 
+    /**
+     * Defines unit tests for {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)}.
+     */
     @Nested
     @DisplayName("solve(World, Point, Point, Direction)")
     public class SolveTest {
 
+        /**
+         * Returns the method for context information.
+         *
+         * @return the method
+         */
         private BasicMethodLink getMethod() {
             return (BasicMethodLink) H4_MazeSolverIterativeTest.this.getMethod("solve");
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#solve(World, Point, Point, DirectionVector)} returns the correct
+         * number of steps.
+         */
         @DisplayName("29 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
             + "speichert dies entsprechend ab.")
         @Test
@@ -268,6 +395,16 @@ public class H4_MazeSolverIterativeTest {
                     .formatted(found.size()));
         }
 
+        /**
+         * Tests whether {@link MazeSolverIterative#solve(World, Point, Point, DirectionVector)} returns the correct
+         * array size.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("30 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
             + "Schritte entspricht.")
@@ -304,6 +441,16 @@ public class H4_MazeSolverIterativeTest {
                     .formatted(world, s, e, d, expected.length, actual.length));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * start and end point.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("31 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
             + "korrekt enthält.")
@@ -346,6 +493,16 @@ public class H4_MazeSolverIterativeTest {
                     .formatted(world, s, e, d, expected[expected.length - 1], actual[actual.length - 1]));
         }
 
+        /**
+         * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
+         * points.
+         *
+         * @param properties the properties of the world
+         * @param s          the start point to test
+         * @param e          the end point to test
+         * @param d          the direction to test
+         * @param node       the expected array
+         */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("32 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
             + "korrekt enthält. (Ausgenommen Start- und Endpunkt)")

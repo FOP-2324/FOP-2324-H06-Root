@@ -15,13 +15,28 @@ import static h06.TutorUtils.getTypeLink;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertEquals;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.contextBuilder;
 
+/**
+ * Defines unit tests for {@link DirectionVector}.
+ *
+ * @author Nhan Huynh
+ */
 @DisplayName("H1 | DirectionVector")
 public class H1_DirectionVectorTest {
 
 
+    /**
+     * Defines unit tests for the method {@link DirectionVector#rotate270()}.
+     */
     @DisplayName("rotate270()")
     @Nested
     public class Rotate270Test {
+
+        /**
+         * Tests whether the input vector is rotated correctly.
+         *
+         * @param input    the input vector
+         * @param expected the expected vector
+         */
         @ParameterizedTest(name = "Input: {0}")
         @DisplayName("01 | Methode rotate270() gibt in allen Fällen den korrekten Vektor zurück.")
         @JsonClasspathSource(value = {
@@ -49,9 +64,19 @@ public class H1_DirectionVectorTest {
         }
     }
 
+    /**
+     * Defines unit tests for the method {@link DirectionVector#rotate90()}.
+     */
     @DisplayName("rotate90()")
     @Nested
     public class Rotate90Test {
+
+        /**
+         * Tests whether the input vector is rotated correctly.
+         *
+         * @param input    the input vector
+         * @param expected the expected vector
+         */
         @ParameterizedTest(name = "Input: {0}")
         @DisplayName("02 | Methode rotate90() gibt in allen Fällen den korrekten Vektor zurück.")
         @JsonClasspathSource(value = {

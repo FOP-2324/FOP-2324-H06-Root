@@ -19,9 +19,22 @@ import static h06.TutorUtils.getMethodLink;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertEquals;
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.contextBuilder;
 
+/**
+ * Defines unit tests for {@link World}.
+ *
+ * @see H1_DirectionVectorTest
+ */
 @DisplayName("H2 | World")
 public class H2_WorldTest {
 
+    /**
+     * Tests whether {@link World#isBlocked(Point, DirectionVector)} returns the expected value.
+     *
+     * @param properties the properties of the world
+     * @param p          the point to test
+     * @param d          the direction vector to test
+     * @param expected   the expected value
+     */
     private void assertIsBlocked(WorldProperties properties, Point p, DirectionVector d, boolean expected) {
         MethodLink method = getMethodLink(
             Package.WORLD,
@@ -44,10 +57,21 @@ public class H2_WorldTest {
     }
 
 
+    /**
+     * Defines unit tests for the method {@link World#isBlocked(Point, DirectionVector)}.
+     */
     @DisplayName("isBlocked(Point, DirectionVector)")
     @Nested
     public class IsBlockedTest {
 
+        /**
+         * Tests whether {@link World#isBlocked(Point, DirectionVector)} returns the correct value for points outside
+         * the world.
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction vector to test
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("03 | isBlocked(Point, DirectionVector) gibt für Koordinaten außerhalb der Welt false true.")
         @JsonClasspathSource(value = {
@@ -64,9 +88,18 @@ public class H2_WorldTest {
             assertIsBlocked(properties, p, d, true);
         }
 
+        /**
+         * Tests whether {@link World#isBlocked(Point, DirectionVector)} returns the correct value for points inside
+         * the world. (Only direction left and up).
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction vector to test
+         * @param expected   the expected value
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("04 | isBlocked(Point, DirectionVector) gibt für Koordinaten innerhalb der Welt mit "
-            + "Richtungsvektor rechts und unten korrekte Werte zurück.")
+            + "Richtungsvektor links und oben korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "World/isBlocked/leftup_1.json",
             "World/isBlocked/leftup_2.json",
@@ -82,9 +115,18 @@ public class H2_WorldTest {
             assertIsBlocked(properties, p, d, expected);
         }
 
+        /**
+         * Tests whether {@link World#isBlocked(Point, DirectionVector)} returns the correct value for points inside
+         * the world. (Only direction right and down).
+         *
+         * @param properties the properties of the world
+         * @param p          the point to test
+         * @param d          the direction vector to test
+         * @param expected   the expected value
+         */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
         @DisplayName("05 | isBlocked(Point, DirectionVector) gibt für Koordinaten innerhalb der Welt mit "
-            + "Richtungsvektor links und oben korrekte Werte zurück.")
+            + "Richtungsvektor rechts und unten korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "World/isBlocked/rightdown_1.json",
             "World/isBlocked/rightdown_2.json",
