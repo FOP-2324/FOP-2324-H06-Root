@@ -135,8 +135,6 @@ public class World {
         int x;
         int y;
         boolean horizontal;
-        // 1 point for vertical
-        // 1 point for special case
         if (p.x > r.x) {
             // Right, vertical check
             x = r.x;
