@@ -49,10 +49,10 @@ public class MazeVisualizer implements ProblemVisualizer {
     @Override
     public void run(ProblemSolver solver, Point s, Point e) {
         Point[] path = solver.solve(world, s, e, DirectionVector.UP);
+        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
+        fopbot.World.getGlobalWorld().setFieldColor(e.x, e.y, Color.YELLOW);
         Robot robot = new Robot(s.x, s.y);
 
-        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
-        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.YELLOW);
         for (int i = 1; i < path.length; i++) {
             Point p = path[i];
             int x = robot.getX();
