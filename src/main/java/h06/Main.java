@@ -1,5 +1,7 @@
 package h06;
 
+import fopbot.World;
+
 /**
  * Main entry point in executing the program.
  */
