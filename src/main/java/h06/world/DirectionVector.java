@@ -58,7 +58,6 @@ public enum DirectionVector {
      * @return the direction vector counterclockwise to this direction vector
      */
     public DirectionVector rotate270() {
-        // 1 point
         return this == UP ? LEFT : this == LEFT ? DOWN : this == DOWN ? RIGHT : UP;
     }
 
@@ -68,7 +67,6 @@ public enum DirectionVector {
      * @return the direction vector clockwise to this direction vector
      */
     public DirectionVector rotate90() {
-        // 1 point
         if (this == UP) {
             return RIGHT;
         } else if (this == RIGHT) {
