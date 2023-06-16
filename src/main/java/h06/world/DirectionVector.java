@@ -44,12 +44,12 @@ public enum DirectionVector {
     /**
      * Constructs a new direction vector with the given x and y components.
      *
-     * @param x the x component of the direction vector
-     * @param y the y component of the direction vector
+     * @param dx the x component of the direction vector
+     * @param dy the y component of the direction vector
      */
-    DirectionVector(int x, int y) {
-        this.dx = x;
-        this.dy = y;
+    DirectionVector(int dx, int dy) {
+        this.dx = dx;
+        this.dy = dy;
     }
 
     /**
