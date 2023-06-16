@@ -26,24 +26,11 @@ public class MazeSolverRecursive implements MazeSolver {
 
     @Override
     public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
-        return numberOfStepsHelper(world, s, e, d);
-    }
-
-    /**
-     * Helper method for numberOfSteps. Returns the number of steps from p to end.
-     *
-     * @param world the world to solve the maze in
-     * @param s     the current point
-     * @param e     the end point
-     * @param d     the current direction
-     * @return the number of steps from p to end
-     */
-    private int numberOfStepsHelper(World world, Point s, Point e, DirectionVector d) {
         if (s.equals(e)) {
             return 1;
         }
         DirectionVector next = nextStep(world, s, d.rotate270());
-        return 1 + numberOfStepsHelper(world, next.getMovement(s), e, next);
+        return 1 + numberOfSteps(world, next.getMovement(s), e, next);
     }
 
     @Override
