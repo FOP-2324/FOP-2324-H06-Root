@@ -34,7 +34,8 @@ jagr {
 dependencies {
     implementation(libs.annotations)
     implementation(libs.algoutils.student)
-    testImplementation(libs.junit.core)
+    testImplementation(libs.bundles.junit)
+    implementation(libs.fopbot)
 }
 
 application {
