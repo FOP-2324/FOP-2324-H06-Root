@@ -13,15 +13,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
 import org.opentest4j.AssertionFailedError;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtBinaryOperator;
+import spoon.reflect.code.CtConditional;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtLiteral;
+import spoon.reflect.code.CtReturn;
 import spoon.reflect.reference.CtExecutableReference;
 
 import java.awt.Point;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static h06.TutorUtils.assertRecursive;
 import static h06.TutorUtils.buildWorldContext;
 import static h06.TutorUtils.getMethodLink;
 import static h06.TutorUtils.getTypeLink;
@@ -44,6 +48,7 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
  * @author Nhan Huynh
  */
 @DisplayName("H3 | MazeSolverRecursive")
+@TestForSubmission
 public class H3_MazeSolverRecursiveTest {
 
     /**
@@ -74,7 +79,7 @@ public class H3_MazeSolverRecursiveTest {
      * Defines unit tests for {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)}.
      */
     @Nested
-    @DisplayName("nextStep(World, Point, DirectionVector)")
+    @DisplayName("H3.1 | nextStep(World, Point, DirectionVector)")
     public class NextStepTest {
 
         /**
@@ -91,7 +96,7 @@ public class H3_MazeSolverRecursiveTest {
             World world = properties.createWorld();
             DirectionVector actual = solver.nextStep(world, p, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("p", p)
                 .add("d", d)
                 .add("Expected", expected)
@@ -115,7 +120,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("06 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
+        @DisplayName("09 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/up.json",
@@ -139,7 +144,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("07 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
+        @DisplayName("10 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/left.json",
@@ -163,7 +168,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("08 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
+        @DisplayName("11 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/up_complex.json",
@@ -187,7 +192,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("09 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
+        @DisplayName("12 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/left_complex.json",
@@ -200,13 +205,51 @@ public class H3_MazeSolverRecursiveTest {
             @Property("expected") DirectionVector expected) {
             assertNextStep(properties, p, d, expected);
         }
+
+        @DisplayName("13 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            TypeLink type = getTypeLink(Package.WORLD, DirectionVector.class);
+            BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
+            Context context = contextBuilder().subject(method).build();
+
+            List<CtReturn<?>> returns = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
+                .list();
+            boolean found = false;
+            for (CtReturn<?> ret : returns) {
+                if (ret.getReturnedExpression() instanceof CtConditional<?> expression) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found, context,
+                result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
+                    + "conditional statement, but found %s"
+                    .formatted(returns.stream().map(CtReturn::getReturnedExpression).toList()));
+
+            List<? extends CtExecutableReference<?>> calls = method.getCtElement()
+                .filterChildren(it -> it instanceof CtInvocation<?>)
+                .list()
+                .stream()
+                .map(it -> (CtInvocation<?>) it)
+                .map(CtAbstractInvocation::getExecutable)
+                .filter(it -> {
+                    String name = it.getSimpleName();
+                    return !name.equals("isBlocked") && !name.equals("nextStep") && !name.equals("rotate90");
+                })
+                .toList();
+            assertTrue(calls.isEmpty(), context,
+                result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should not contain any "
+                    + "invocations, but found %s".formatted(calls));
+            assertRecursive(method.getCtElement(), "MazeSolverRecursive#nextStep(World, Point, DirectionVector)", context);
+        }
     }
 
     /**
      * Defines unit tests for the method {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)}.
      */
     @Nested
-    @DisplayName("numberOfSteps(World, Point, Point, Direction)")
+    @DisplayName("H3.2 | numberOfSteps(World, Point, Point, Direction)")
     public class NumberOfStepsTest {
 
         /**
@@ -219,63 +262,21 @@ public class H3_MazeSolverRecursiveTest {
         }
 
         /**
-         * Returns the helper method for context information.
-         *
-         * @return the helper method for context information
-         */
-        private BasicMethodLink getHelperMethod() {
-            return (BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfStepsHelper");
-        }
-
-        /**
-         * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} calls
-         * the helper method.
-         */
-        @DisplayName("10 | numberOfSteps(World, Point, Point, Direction) soll die Aufgabe an numberOfStepsHelper "
-            + "delegieren.")
-        @Test
-        public void testCallHelper() {
-            BasicMethodLink method = getMethod();
-            List<? extends CtExecutableReference<?>> calls = method.getCtElement()
-                .filterChildren(it -> it instanceof CtInvocation<?>)
-                .list()
-                .stream()
-                .map(it -> (CtInvocation<?>) it)
-                .map(CtAbstractInvocation::getExecutable)
-                .toList();
-            List<? extends CtExecutableReference<?>> found = calls.stream()
-                .filter(it -> it.getSimpleName().equals("numberOfStepsHelper"))
-                .toList();
-            Context context = contextBuilder().subject(method)
-                .add("Method invocations", calls)
-                .build();
-            assertEquals(
-                1, found.size(), context,
-                result -> "numberOfSteps(World, Point, Point, Direction) should call numberOfStepsHelper, but found %s."
-                    .formatted(found));
-        }
-
-        /**
          * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} computes
          * the number of steps.
          */
-        @DisplayName("11 | numberOfStepsHelper(World, Point, Point, Direction) berechnet die Anzahl der Schritte im "
+        @DisplayName("14 | numberOfSteps(World, Point, Point, Direction) berechnet die Anzahl der Schritte im "
             + "Rekursionsschritt.")
         @Test
         public void testCounting() {
-            BasicMethodLink method = getHelperMethod();
+            BasicMethodLink method = getMethod();
             List<CtBinaryOperator<?>> binaryOps = method.getCtElement()
                 .filterChildren(it -> it instanceof CtBinaryOperator<?>)
                 .list();
             Context context = contextBuilder().subject(method).build();
             Consumer<CtExpression<?>> assertLiteral = it -> assertTrue(it instanceof CtLiteral<?>, context,
                 result -> "Expected literal, but was %s.".formatted(it.getClass().getSimpleName()));
-            Consumer<CtExpression<?>> assertInvocation = it -> assertTrue(
-                it instanceof CtInvocation<?> call
-                    && call.getExecutable().getSimpleName().equals("numberOfStepsHelper"),
-                context, result -> "Expected call to numberOfStepsHelper, but was %s."
-                    .formatted(it.getClass().getSimpleName())
-            );
+
             BiConsumer<CtBinaryOperator<?>, Consumer<CtExpression<?>>> assertOp = (op, assertion) -> {
                 try {
                     assertion.accept(op.getLeftHandOperand());
@@ -286,7 +287,6 @@ public class H3_MazeSolverRecursiveTest {
 
             for (CtBinaryOperator<?> op : binaryOps) {
                 assertOp.accept(op, assertLiteral);
-                assertOp.accept(op, assertInvocation);
                 break;
             }
         }
@@ -295,11 +295,11 @@ public class H3_MazeSolverRecursiveTest {
          * Tests whether {@link MazeSolverRecursive#numberOfSteps(World, Point, Point, DirectionVector)} contains
          * a variable that keeps track of the number of steps.
          */
-        @DisplayName("12 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
+        @DisplayName("15 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
             + "bisherigen berechneten Schritte merkt.")
         @Test
         public void testNextStep() {
-            BasicMethodLink method = getHelperMethod();
+            BasicMethodLink method = getMethod();
             List<? extends CtExecutableReference<?>> calls = method.getCtElement()
                 .filterChildren(it -> it instanceof CtInvocation<?>)
                 .list()
@@ -334,7 +334,7 @@ public class H3_MazeSolverRecursiveTest {
             World world = properties.createWorld();
             int actual = solver.numberOfSteps(world, s, e, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("Expected", expected)
@@ -359,7 +359,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("13 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
+        @DisplayName("16 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
             + "zurück, wenn Start- und Endpunkt gleich sind.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_se.json",
@@ -385,7 +385,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("14 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
+        @DisplayName("17 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
             + "der Pfad nur aus Start- und Endpunt besteht.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_spluse.json",
@@ -411,7 +411,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("15 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
+        @DisplayName("18 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
             + "Pfade zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_complex1.json",
@@ -428,14 +428,21 @@ public class H3_MazeSolverRecursiveTest {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
 
-
+        @DisplayName("19 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfSteps"));
+            Context context = contextBuilder().subject(method)
+                .build();
+            assertRecursive(method.getCtElement(), "MazeSolverRecursive#numberOfSteps(World, Point, Point)", context);
+        }
     }
 
     /**
      * Defines unit tests for {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)}.
      */
     @Nested
-    @DisplayName("solve(World, Point, Point, Direction)")
+    @DisplayName("H3.3 | solve(World, Point, Point, Direction)")
     public class SolveTest {
 
         /**
@@ -451,7 +458,7 @@ public class H3_MazeSolverRecursiveTest {
          * Tests whether {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)} returns the correct
          * number of steps.
          */
-        @DisplayName("16 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
+        @DisplayName("20 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
             + "speichert dies entsprechend ab.")
         @Test
         public void testComputeArraySize() {
@@ -486,7 +493,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("17 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
+        @DisplayName("20 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
             + "Schritte entspricht.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -508,7 +515,7 @@ public class H3_MazeSolverRecursiveTest {
             World world = properties.createWorld();
             Point[] actual = solver.solve(world, s, e, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("d", d)
@@ -532,7 +539,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("18 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Startpunkt korrekt "
+        @DisplayName("21 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Startpunkt korrekt "
             + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -555,7 +562,7 @@ public class H3_MazeSolverRecursiveTest {
             Point[] actual = solver.solve(world, s, e, d);
 
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", s)
                 .add("d", d)
@@ -579,7 +586,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("19 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Endpunkt korrekt "
+        @DisplayName("22 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Endpunkt korrekt "
             + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -602,7 +609,7 @@ public class H3_MazeSolverRecursiveTest {
             Point[] actual = solver.solve(world, s, e, d);
 
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", s)
                 .add("d", d)
@@ -626,7 +633,7 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("20 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
+        @DisplayName("23 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
             + "korrekt enthält. (Ausgenommen Start- und Endpunkt)")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -651,7 +658,7 @@ public class H3_MazeSolverRecursiveTest {
 
             for (int i = 1; i < expected.length - 1; i++) {
                 Context context = contextBuilder().subject(method)
-                    .add(buildWorldContext(properties, world))
+                    .add(buildWorldContext(properties))
                     .add("s", s)
                     .add("e", e)
                     .add("d", d)
@@ -665,6 +672,15 @@ public class H3_MazeSolverRecursiveTest {
                     result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the point %s at %s, but was %s."
                         .formatted(world, s, e, d, expected[index], index, actual[index]));
             }
+        }
+
+        @DisplayName("24 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfSteps"));
+            Context context = contextBuilder().subject(method)
+                .build();
+            assertRecursive(method.getCtElement(), "MazeSolverRecursive#solve(World, Point, Point, Direction))", context);
         }
     }
 }

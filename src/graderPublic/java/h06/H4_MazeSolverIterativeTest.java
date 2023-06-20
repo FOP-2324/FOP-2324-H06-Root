@@ -14,6 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
@@ -27,6 +28,7 @@ import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
 
+import static h06.TutorUtils.assertIterative;
 import static h06.TutorUtils.buildWorldContext;
 import static h06.TutorUtils.getMethodLink;
 import static h06.TutorUtils.getTypeLink;
@@ -39,6 +41,7 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
  */
 @DisplayName("H4 | MazeSolverIterative")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
+@TestForSubmission
 public class H4_MazeSolverIterativeTest {
 
     /**
@@ -69,7 +72,7 @@ public class H4_MazeSolverIterativeTest {
      * Defines unit tests for {@link MazeSolverIterative#nextStep(World, Point, DirectionVector)}.
      */
     @Nested
-    @DisplayName("nextStep(World, Point, DirectionVector)")
+    @DisplayName("H4.1 | nextStep(World, Point, DirectionVector)")
     public class NextStepTest {
 
         /**
@@ -86,7 +89,7 @@ public class H4_MazeSolverIterativeTest {
             World world = properties.createWorld();
             DirectionVector actual = solver.nextStep(world, p, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("p", p)
                 .add("d", d)
                 .add("Expected", expected)
@@ -110,7 +113,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("20 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
+        @DisplayName("25 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/up.json",
@@ -134,7 +137,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("21 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
+        @DisplayName("26 | nextStep(World, Point, DirectionVector) für einfache Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/left.json",
@@ -158,7 +161,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("22 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
+        @DisplayName("27 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen oben und "
             + "unten korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/up_complex.json",
@@ -182,7 +185,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected result
          */
         @ParameterizedTest(name = "Koordinate: {1}, Richtung: {2}")
-        @DisplayName("23 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
+        @DisplayName("28 | nextStep(World, Point, DirectionVector) für komplexere Fälle für die Richtungen links und "
             + "rechts korrekte Werte zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/nextStep/left_complex.json",
@@ -195,10 +198,18 @@ public class H4_MazeSolverIterativeTest {
             @Property("expected") DirectionVector expected) {
             assertNextStep(properties, p, d, expected);
         }
+
+        @DisplayName("29 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
+            Context context = contextBuilder().subject(method).build();
+            assertIterative(method.getCtElement(), "MazeSolverIterative#nextStep(World, Point, DirectionVector)", context);
+        }
     }
 
     @Nested
-    @DisplayName("numberOfSteps(World, Point, Point, Direction)")
+    @DisplayName("H4.2 | numberOfSteps(World, Point, Point, Direction)")
     public class NumberOfStepsTest {
 
         /**
@@ -214,7 +225,7 @@ public class H4_MazeSolverIterativeTest {
          * Tests whether {@link MazeSolverIterative#numberOfSteps(World, Point, Point, DirectionVector)} computes
          * the number of steps.
          */
-        @DisplayName("24 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
+        @DisplayName("30 | numberOfSteps(World, Point, Point, Direction) enthält eine Variable, die die Anzahl der "
             + "bisherigen berechneten Schritte merkt.")
         @Test
         public void testCounterVariable() {
@@ -255,7 +266,7 @@ public class H4_MazeSolverIterativeTest {
             World world = properties.createWorld();
             int actual = solver.numberOfSteps(world, s, e, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("Expected", expected)
@@ -280,7 +291,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("26 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
+        @DisplayName("31 | numberOfSteps(World, Point, Point, Direction) gibt die korrekte Anzahl an Schritten "
             + "zurück, wenn Start- und Endpunkt gleich sind.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_se.json",
@@ -306,7 +317,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("27 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
+        @DisplayName("32 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten zurück, wenn "
             + "der Pfad nur aus Start- und Endpunt besteht.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_spluse.json",
@@ -332,7 +343,7 @@ public class H4_MazeSolverIterativeTest {
          * @param expected   the expected number of steps
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("28 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
+        @DisplayName("33 | numberOfSteps(World, Point, Point) gibt die korrekte Anzahl an Schritten für komplexere "
             + "Pfade zurück.")
         @JsonClasspathSource(value = {
             "MazeSolver/numberOfSteps/path_complex1.json",
@@ -348,13 +359,21 @@ public class H4_MazeSolverIterativeTest {
         ) {
             assertNumberOfSteps(properties, s, e, d, expected);
         }
+
+        @DisplayName("34 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            BasicMethodLink method = getMethod();
+            Context context = contextBuilder().subject(method).build();
+            assertIterative(method.getCtElement(), "MazeSolverIterative#numberOfSteps(World, Point, Point))", context);
+        }
     }
 
     /**
      * Defines unit tests for {@link MazeSolverRecursive#solve(World, Point, Point, DirectionVector)}.
      */
     @Nested
-    @DisplayName("solve(World, Point, Point, Direction)")
+    @DisplayName("H4.3 | solve(World, Point, Point, Direction)")
     public class SolveTest {
 
         /**
@@ -370,10 +389,9 @@ public class H4_MazeSolverIterativeTest {
          * Tests whether {@link MazeSolverIterative#solve(World, Point, Point, DirectionVector)} returns the correct
          * number of steps.
          */
-        @DisplayName("29 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
+        @DisplayName("35 | solve(World, Point, Point, Direction) berechnet die korrekte Anzahl an Schritten und "
             + "speichert dies entsprechend ab.")
         @Test
-
         public void testComputeArraySize() {
             BasicMethodLink method = getMethod();
             List<? extends CtExecutableReference<?>> calls = method.getCtElement()
@@ -406,7 +424,7 @@ public class H4_MazeSolverIterativeTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("30 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
+        @DisplayName("36 | solve(World, Point, Point, Direction) gibt ein Array zurück, dessen Länge der Anzahl der "
             + "Schritte entspricht.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -428,7 +446,7 @@ public class H4_MazeSolverIterativeTest {
             World world = properties.createWorld();
             Point[] actual = solver.solve(world, s, e, d);
             Context context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("d", d)
@@ -452,7 +470,7 @@ public class H4_MazeSolverIterativeTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("31 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
+        @DisplayName("37 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
             + "korrekt enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -475,7 +493,7 @@ public class H4_MazeSolverIterativeTest {
             Point[] actual = solver.solve(world, s, e, d);
 
             Context.Builder<?> context = contextBuilder().subject(method)
-                .add(buildWorldContext(properties, world))
+                .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("d", d)
@@ -504,7 +522,7 @@ public class H4_MazeSolverIterativeTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("32 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
+        @DisplayName("38 | solve(World, Point, Point, Direction) gibt ein Array zurück, das alle Punkte des Pfades "
             + "korrekt enthält. (Ausgenommen Start- und Endpunkt)")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
@@ -529,7 +547,7 @@ public class H4_MazeSolverIterativeTest {
 
             for (int i = 1; i < expected.length - 1; i++) {
                 Context context = contextBuilder().subject(method)
-                    .add(buildWorldContext(properties, world))
+                    .add(buildWorldContext(properties))
                     .add("s", s)
                     .add("e", e)
                     .add("d", d)
@@ -543,6 +561,14 @@ public class H4_MazeSolverIterativeTest {
                     result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the point %s at %s, but was %s"
                         .formatted(world, s, e, d, expected[index], index, actual[index]));
             }
+        }
+
+        @DisplayName("39 | Verbindliche Anforderungen")
+        @Test
+        public void testRequirements() {
+            BasicMethodLink method = getMethod();
+            Context context = contextBuilder().subject(method).build();
+            assertIterative(method.getCtElement(), "MazeSolverIterative#solve(World, Point, Point, Direction)", context);
         }
     }
 }
