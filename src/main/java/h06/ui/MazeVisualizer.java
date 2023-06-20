@@ -21,6 +21,13 @@ public class MazeVisualizer implements ProblemVisualizer {
      */
     private World world;
 
+
+    /**
+     * Constructs a maze visualizer.
+     */
+    public MazeVisualizer() {
+    }
+
     @Override
     public void init(World world) {
         this.world = world;
