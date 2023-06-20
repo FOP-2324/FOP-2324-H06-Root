@@ -47,16 +47,16 @@ public class MazeVisualizer implements ProblemVisualizer {
     }
 
     @Override
-    public void run(ProblemSolver solver, Point s, Point e) {
-        Point[] path = solver.solve(world, s, e, DirectionVector.UP);
+    public void run(ProblemSolver solver, Point s, Point e, DirectionVector d) {
+        Point[] path = solver.solve(world, s, e, d);
+        Robot robot = new Robot(s.x, s.y, Direction.values()[d.ordinal()], 0);
+
         fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
         fopbot.World.getGlobalWorld().setFieldColor(e.x, e.y, Color.YELLOW);
-        Robot mazeRunner = new Robot(s.x, s.y);
-
         for (int i = 1; i < path.length; i++) {
             Point p = path[i];
-            int x = mazeRunner.getX();
-            int y = mazeRunner.getY();
+            int x = robot.getX();
+            int y = robot.getY();
 
             // Compute movement direction
             Direction direction;
@@ -71,12 +71,12 @@ public class MazeVisualizer implements ProblemVisualizer {
             }
 
             // Turn robot to the correct direction and then move
-            while (mazeRunner.getDirection() != direction) {
-                mazeRunner.turnLeft();
+            while (robot.getDirection() != direction) {
+                robot.turnLeft();
             }
-            mazeRunner.move();
+            robot.move();
         }
-        mazeRunner.turnOff();
+        robot.turnOff();
     }
 
     @Override

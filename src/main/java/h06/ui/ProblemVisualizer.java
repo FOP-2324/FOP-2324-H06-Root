@@ -1,6 +1,7 @@
 package h06.ui;
 
 import h06.problems.ProblemSolver;
+import h06.world.DirectionVector;
 import h06.world.World;
 
 import java.awt.Point;
@@ -39,8 +40,9 @@ public interface ProblemVisualizer {
      * @param solver the solver to use
      * @param s      the start point
      * @param e      the end point
+     * @param d      the direction to start with
      */
-    void run(ProblemSolver solver, Point s, Point e);
+    void run(ProblemSolver solver, Point s, Point e, DirectionVector d);
 
     /**
      * Sets the delay between each step in milliseconds.
