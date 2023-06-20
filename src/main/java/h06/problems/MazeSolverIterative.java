@@ -2,6 +2,7 @@ package h06.problems;
 
 import h06.world.DirectionVector;
 import h06.world.World;
+import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 
 import java.awt.Point;
 
@@ -19,6 +20,7 @@ public class MazeSolverIterative implements MazeSolver {
     public MazeSolverIterative() {
     }
 
+    @StudentImplementationRequired
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
         DirectionVector next = d.rotate270();
@@ -32,6 +34,7 @@ public class MazeSolverIterative implements MazeSolver {
         return d;
     }
 
+    @StudentImplementationRequired
     @Override
     public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
         int steps = 0;
@@ -46,6 +49,7 @@ public class MazeSolverIterative implements MazeSolver {
         return steps;
     }
 
+    @StudentImplementationRequired
     @Override
     public Point[] solve(World world, Point s, Point e, DirectionVector d) {
         int size = numberOfSteps(world, s, e, d);

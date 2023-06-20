@@ -2,6 +2,7 @@ package h06.problems;
 
 import h06.world.DirectionVector;
 import h06.world.World;
+import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 
 import java.awt.Point;
 
@@ -19,11 +20,13 @@ public class MazeSolverRecursive implements MazeSolver {
     public MazeSolverRecursive() {
     }
 
+    @StudentImplementationRequired
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
         return !world.isBlocked(p, d) ? d : nextStep(world, p, d.rotate90());
     }
 
+    @StudentImplementationRequired
     @Override
     public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
         if (s.equals(e)) {
@@ -33,6 +36,7 @@ public class MazeSolverRecursive implements MazeSolver {
         return 1 + numberOfSteps(world, next.getMovement(s), e, next);
     }
 
+    @StudentImplementationRequired
     @Override
     public Point[] solve(World world, Point s, Point e, DirectionVector d) {
         int size = numberOfSteps(world, s, e, d);
@@ -51,6 +55,7 @@ public class MazeSolverRecursive implements MazeSolver {
      * @param path  the path calculated so far from s to p
      * @param index the index of the next free spot in path
      */
+    @StudentImplementationRequired
     private void solveHelper(World world, Point p, Point e, DirectionVector d, Point[] path, int index) {
         if (p.equals(e)) {
             path[index] = p;
