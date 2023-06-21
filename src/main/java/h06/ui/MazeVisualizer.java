@@ -21,6 +21,12 @@ public class MazeVisualizer implements ProblemVisualizer {
      */
     private World world;
 
+    /**
+     * Constructs a maze visualizer.
+     */
+    public MazeVisualizer() {
+    }
+
     @Override
     public void init(World world) {
         this.world = world;
@@ -47,12 +53,13 @@ public class MazeVisualizer implements ProblemVisualizer {
     }
 
     @Override
-    public void run(ProblemSolver solver, Point s, Point e) {
-        Point[] path = solver.solve(world, s, e, DirectionVector.UP);
-        Robot robot = new Robot(s.x, s.y);
+    public void run(ProblemSolver solver, Point s, Point e, DirectionVector d) {
+        Point[] path = solver.solve(world, s, e, d);
+        Robot robot = new Robot(s.x, s.y, Direction.values()[d.ordinal()], 0);
 
         fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
-        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.YELLOW);
+        fopbot.World.getGlobalWorld().setFieldColor(e.x, e.y, Color.YELLOW);
+
         for (int i = 1; i < path.length; i++) {
             Point p = path[i];
             int x = robot.getX();
