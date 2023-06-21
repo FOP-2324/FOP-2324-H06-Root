@@ -1,5 +1,5 @@
 [versions]
-algoutils = "0.7.0-SNAPSHOT"
+algoutils = "0.6.3"
 
 [plugins]
 style = { id = "org.sourcegrade.style", version = "2.1.0" }

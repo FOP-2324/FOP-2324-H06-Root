@@ -1,7 +1,5 @@
 package h06.world;
 
-import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
-
 import java.awt.Point;
 
 /**
@@ -59,7 +57,6 @@ public enum DirectionVector {
      *
      * @return the direction vector counterclockwise to this direction vector
      */
-    @StudentImplementationRequired
     public DirectionVector rotate270() {
         return this == UP ? LEFT : this == LEFT ? DOWN : this == DOWN ? RIGHT : UP;
     }
@@ -69,7 +66,6 @@ public enum DirectionVector {
      *
      * @return the direction vector clockwise to this direction vector
      */
-    @StudentImplementationRequired
     public DirectionVector rotate90() {
         if (this == UP) {
             return RIGHT;
