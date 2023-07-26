@@ -21,7 +21,7 @@ public class MazeSolverRecursive implements MazeSolver {
 
     @Override
     public DirectionVector nextStep(World world, Point p, DirectionVector d) {
-        return !world.isBlocked(p, d) ? d : nextStep(world, p, d.rotate90());
+        return !world.isBlocked(p, d.rotate270()) ? d.rotate270() : nextStep(world, p, d.rotate90());
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MazeSolverRecursive implements MazeSolver {
         if (s.equals(e)) {
             return 1;
         }
-        DirectionVector next = nextStep(world, s, d.rotate270());
+        DirectionVector next = nextStep(world, s, d);
         return 1 + numberOfSteps(world, next.getMovement(s), e, next);
     }
 
@@ -57,7 +57,7 @@ public class MazeSolverRecursive implements MazeSolver {
             return;
         }
         path[index++] = p;
-        DirectionVector next = nextStep(world, p, d.rotate270());
+        DirectionVector next = nextStep(world, p, d);
         solveHelper(world, next.getMovement(p), e, next, path, index);
     }
 }
