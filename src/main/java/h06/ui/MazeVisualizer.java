@@ -60,8 +60,6 @@ public class MazeVisualizer implements ProblemVisualizer {
         fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
         fopbot.World.getGlobalWorld().setFieldColor(e.x, e.y, Color.YELLOW);
 
-        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.BLUE);
-        fopbot.World.getGlobalWorld().setFieldColor(s.x, s.y, Color.YELLOW);
         for (int i = 1; i < path.length; i++) {
             Point p = path[i];
             int x = robot.getX();
