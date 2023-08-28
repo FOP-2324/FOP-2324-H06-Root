@@ -235,7 +235,10 @@ public class H3_MazeSolverRecursiveTest {
                 .map(CtAbstractInvocation::getExecutable)
                 .filter(it -> {
                     String name = it.getSimpleName();
-                    return !name.equals("isBlocked") && !name.equals("nextStep") && !name.equals("rotate90");
+                    return !name.equals("isBlocked")
+                        && !name.equals("nextStep")
+                        && !name.equals("rotate90")
+                        && !name.equals("rotate270");
                 })
                 .toList();
             assertTrue(calls.isEmpty(), context,
