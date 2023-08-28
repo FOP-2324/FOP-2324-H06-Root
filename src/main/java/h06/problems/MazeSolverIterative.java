@@ -26,7 +26,6 @@ public class MazeSolverIterative implements MazeSolver {
             if (!world.isBlocked(p, next)) {
                 return next;
             }
-
             next = next.rotate90();
         }
         return d;
