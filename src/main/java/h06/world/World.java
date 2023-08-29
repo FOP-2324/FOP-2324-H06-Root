@@ -2,6 +2,7 @@ package h06.world;
 
 import fopbot.Field;
 import fopbot.FieldEntity;
+import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 
 import java.awt.Point;
 
@@ -126,6 +127,7 @@ public class World {
      * @param d the direction vector to add to the point
      * @return {@code true} if the position is blocked, {@code false} otherwise
      */
+    @StudentImplementationRequired
     public boolean isBlocked(Point p, DirectionVector d) {
         // Outside
         if (isOutside(p, d)) {

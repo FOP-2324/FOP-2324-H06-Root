@@ -2,6 +2,7 @@ package h06.problems;
 
 import h06.world.DirectionVector;
 import h06.world.World;
+import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 
 import java.awt.Point;
 
@@ -10,6 +11,7 @@ import java.awt.Point;
  *
  * @author Nhan Huynh
  */
+@DoNotTouch
 public interface ProblemSolver {
 
     /**
