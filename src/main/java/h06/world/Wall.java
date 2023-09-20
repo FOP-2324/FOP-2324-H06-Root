@@ -1,12 +1,14 @@
 package h06.world;
 
 import fopbot.FieldEntity;
+import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 
 /**
  * A wall with orientation.
  *
  * @author Nhan Huynh
  */
+@DoNotTouch
 public class Wall extends FieldEntity {
 
     /**

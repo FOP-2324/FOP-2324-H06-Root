@@ -1,12 +1,14 @@
 package h06.world;
 
 import fopbot.FieldEntity;
+import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 
 /**
  * A field in a world which can contains entities.
  *
  * @author Nhan Huynh
  */
+@DoNotTouch
 public class Field {
 
     /**
