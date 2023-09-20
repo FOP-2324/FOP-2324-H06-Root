@@ -23,9 +23,6 @@ public class Main {
         System.out.println("Hello World!");
 
         World world = new World(5, 5);
-        Point start = new Point(2, 0);
-        Point end = new Point(2, 4);
-        DirectionVector direction = DirectionVector.UP;
 
         world.placeWall(0, 0, false);
         world.placeWall(0, 1, false);
@@ -50,6 +47,11 @@ public class Main {
         ProblemSolver solver = new MazeSolverRecursive();
         visualizer.init(world);
         visualizer.show();
+
+        Point start = new Point(2, 0);
+        Point end = new Point(2, 4);
+        DirectionVector direction = DirectionVector.UP;
+
         visualizer.run(solver, start, end, direction);
     }
 }

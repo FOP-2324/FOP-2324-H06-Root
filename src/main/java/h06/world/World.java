@@ -129,43 +129,23 @@ public class World {
      */
     @StudentImplementationRequired
     public boolean isBlocked(Point p, DirectionVector d) {
-        // Outside
         if (isOutside(p, d)) {
             return true;
         }
-        Point r = d.getMovement(p);
-        int x;
-        int y;
-        boolean horizontal;
-        if (p.x > r.x) {
-            // Right, vertical check
-            x = r.x;
-            y = r.y;
-            horizontal = false;
-        } else if (p.x < r.x) {
-            // Left vertical check, the wall is on the right of the field, that's why we need to check the left of
-            // the field
-            x = r.x - 1;
-            y = r.y;
-            if (x < 0) {
-                return false;
-            }
-            horizontal = false;
-        } else if (p.y > r.y) {
-            // Down horizontal check
-            x = r.x;
-            y = r.y;
-            horizontal = true;
-        } else {
-            // Up horizontal check, the wall is on the top of the field, that's why we need to check the bottom of
-            // the field
-            x = r.x;
-            y = r.y - 1;
-            horizontal = true;
-            if (y < 0) {
-                return false;
-            }
-        }
-        return isBlocked(x, y, horizontal);
+
+        Point next = d.getMovement(p);
+
+        // Get direction vector from p to next
+        Point delta = new Point(next.x - p.x, next.y - p.y);
+        DirectionVector dir = DirectionVector.from(delta);
+
+        return switch (dir) {
+            //  The wall is on the top of the field, that's why we need to check the bottom of the field
+            case UP -> isBlocked(p.x, p.y, true);
+            // The wall is on the right of the field, that's why we need to check the left of the field
+            case RIGHT -> isBlocked(p.x, p.y, false);
+            case DOWN -> isBlocked(p.x, next.y, true);
+            case LEFT -> isBlocked(next.x, p.y, false);
+        };
     }
 }

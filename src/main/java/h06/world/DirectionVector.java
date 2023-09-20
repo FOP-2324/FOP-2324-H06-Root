@@ -1,5 +1,8 @@
 package h06.world;
 
+
+import org.tudalgo.algoutils.student.annotation.DoNotTouch;
+import org.tudalgo.algoutils.student.annotation.SolutionOnly;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 
 import java.awt.Point;
@@ -45,15 +48,31 @@ public enum DirectionVector {
 
     /**
      * Constructs a new direction vector with the given x and y components.
-     * <p>
-     * <<<<<<< HEAD
      *
      * @param dx the x component of the direction vector
      * @param dy the y component of the direction vector
      */
+    @DoNotTouch
     DirectionVector(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
+    }
+
+    /**
+     * Returns the direction vector with the given x and y components.
+     *
+     * @param p the point to get the direction vector from
+     * @return the direction vector with the given x and y components
+     * @throws IllegalArgumentException if no direction vector with the given x and y components exists
+     */
+    @SolutionOnly
+    public static DirectionVector from(Point p) {
+        for (DirectionVector d : values()) {
+            if (d.dx == p.x && d.dy == p.y) {
+                return d;
+            }
+        }
+        throw new IllegalArgumentException("No direction vector with %s".formatted(p));
     }
 
     /**
@@ -89,6 +108,7 @@ public enum DirectionVector {
      *
      * @return the x component of the direction vector
      */
+    @DoNotTouch
     public int getDx() {
         return dx;
     }
@@ -98,6 +118,7 @@ public enum DirectionVector {
      *
      * @return the y component of the direction vector
      */
+    @DoNotTouch
     public int getDy() {
         return dy;
     }
@@ -108,6 +129,7 @@ public enum DirectionVector {
      * @param p The Point to add to.
      * @return a point that is the result of adding this direction vector to the given point
      */
+    @DoNotTouch
     public Point getMovement(Point p) {
         return new Point(p.x + dx, p.y + dy);
     }
