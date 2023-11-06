@@ -1,6 +1,5 @@
 package h06.world;
 
-import fopbot.Field;
 import fopbot.FieldEntity;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 
@@ -71,7 +70,7 @@ public class World {
      * @param horizontal the orientation of the wall
      */
     public void placeWall(int x, int y, boolean horizontal) {
-        fields[x][y].getEntities().add(new Wall(x, y, horizontal));
+        fields[x][y].addEntity(new Wall(x, y, horizontal));
     }
 
     /**
