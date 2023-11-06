@@ -13,6 +13,7 @@ import java.awt.Point;
  *
  * @author Nhan Huynh
  */
+@DoNotTouch
 public class MazeSolverIterative implements MazeSolver {
 
     /**

@@ -14,6 +14,7 @@ import java.awt.Point;
  *
  * @author Nhan Huynh
  */
+@DoNotTouch
 public enum DirectionVector {
 
     /**
