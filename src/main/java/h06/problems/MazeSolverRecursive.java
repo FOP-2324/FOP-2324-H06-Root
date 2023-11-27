@@ -49,7 +49,7 @@ public class MazeSolverRecursive implements MazeSolver {
     }
 
     /**
-     * Helper method for solve. Returns the path from p to end.
+     * Helper method for solve. Computes the path from p to end.
      *
      * @param world the world to solve the maze in
      * @param p     the current point
