@@ -7,8 +7,11 @@ import h06.problems.MazeSolverRecursive;
 import h06.world.DirectionVector;
 import h06.world.World;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
@@ -30,6 +33,7 @@ import spoon.reflect.reference.CtExecutableReference;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -49,6 +53,12 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
  */
 @DisplayName("H3 | MazeSolverRecursive")
 @TestForSubmission
+@TestMethodOrder(MethodOrderer.DisplayName.class)
+@Timeout(
+    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
+    unit = TimeUnit.SECONDS,
+    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
+)
 public class H3_MazeSolverRecursiveTest {
 
     /**

@@ -2,8 +2,11 @@ package h06;
 
 import h06.world.DirectionVector;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
@@ -18,6 +21,7 @@ import spoon.reflect.code.CtReturn;
 import spoon.reflect.declaration.CtElement;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static h06.TutorUtils.getMethodLink;
 import static h06.TutorUtils.getTypeLink;
@@ -32,7 +36,13 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
  * @author Nhan Huynh
  */
 @DisplayName("H1 | DirectionVector")
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 @TestForSubmission
+@Timeout(
+    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
+    unit = TimeUnit.SECONDS,
+    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
+)
 public class H1_DirectionVectorTest {
 
     /**

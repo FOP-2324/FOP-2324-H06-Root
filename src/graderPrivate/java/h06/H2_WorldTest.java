@@ -3,6 +3,9 @@ package h06;
 import h06.world.DirectionVector;
 import h06.world.World;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
@@ -13,6 +16,7 @@ import org.tudalgo.algoutils.tutor.general.reflections.BasicTypeLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 
 import java.awt.Point;
+import java.util.concurrent.TimeUnit;
 
 import static h06.TutorUtils.buildWorldContext;
 import static h06.TutorUtils.getMethodLink;
@@ -25,7 +29,13 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
  * @see H1_DirectionVectorTest
  */
 @DisplayName("H2 | World")
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 @TestForSubmission
+@Timeout(
+    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
+    unit = TimeUnit.SECONDS,
+    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
+)
 public class H2_WorldTest {
 
     /**
