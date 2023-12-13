@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import org.tudalgo.algoutils.tutor.general.annotation.SkipAfterFirstFailedTest;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
@@ -43,6 +44,7 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
     unit = TimeUnit.SECONDS,
     threadMode = Timeout.ThreadMode.SEPARATE_THREAD
 )
+@SkipAfterFirstFailedTest(TestConstants.SKIP_AFTER_FIRST_FAILED_TEST)
 public class H1_DirectionVectorTest {
 
     /**
