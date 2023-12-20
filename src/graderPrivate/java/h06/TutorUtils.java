@@ -1,5 +1,6 @@
 package h06;
 
+import h06.world.DirectionVector;
 import org.junit.jupiter.api.DisplayName;
 import org.sourcegrade.jagr.api.rubric.Criterion;
 import org.sourcegrade.jagr.api.rubric.Grader;
@@ -164,7 +165,9 @@ public class TutorUtils {
      * @return the criterion for a nested test class
      */
     public static Criterion criterionNested(Class<?> source) {
-        Class<?>[] classes = source.getDeclaredClasses();
+        Class<?>[] classes = Arrays.stream(source.getDeclaredClasses())
+            .filter(clazz -> !clazz.isAnnotationPresent(SkipCheck.class))
+            .toArray(Class[]::new);
         Criterion[] mainCriteria = new Criterion[classes.length];
         for (int i = 0; i < classes.length; i++) {
             Class<?> clazz = classes[i];
@@ -187,6 +190,7 @@ public class TutorUtils {
             }
             mainCriteria[i] = Criterion.builder()
                 .shortDescription(clazz.getAnnotation(DisplayName.class).value())
+                .minPoints(0)
                 .addChildCriteria(criteria.toArray(Criterion[]::new))
                 .build();
         }
@@ -272,4 +276,33 @@ public class TutorUtils {
         return false;
     }
 
+    /**
+     * Returns the direction vector counterclockwise to given direction vector (90 degrees to the left).
+     *
+     * @param d the direction vector to rotate
+     * @return the direction vector counterclockwise to the given direction vector
+     */
+    public static DirectionVector rotate270(DirectionVector d) {
+        return switch (d) {
+            case UP -> DirectionVector.LEFT;
+            case RIGHT -> DirectionVector.UP;
+            case DOWN -> DirectionVector.RIGHT;
+            case LEFT -> DirectionVector.DOWN;
+        };
+    }
+
+    /**
+     * Returns the direction vector clockwise to given direction vector (90 degrees to the right).
+     *
+     * @param d the direction vector to rotate
+     * @return the direction vector clockwise to the given direction vector
+     */
+    public static DirectionVector rotate90(DirectionVector d) {
+        return switch (d) {
+            case UP -> DirectionVector.RIGHT;
+            case RIGHT -> DirectionVector.DOWN;
+            case DOWN -> DirectionVector.LEFT;
+            case LEFT -> DirectionVector.UP;
+        };
+    }
 }

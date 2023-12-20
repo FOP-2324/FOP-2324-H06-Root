@@ -1,6 +1,7 @@
 package h06;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import h06.mock.TestWorld;
 import h06.problems.MazeSolver;
 import h06.problems.MazeSolverIterative;
 import h06.problems.MazeSolverRecursive;
@@ -54,11 +55,6 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
 public class H4_MazeSolverIterativeTest {
 
     /**
-     * The {@link MazeSolver} to test.
-     */
-    private final MazeSolver solver = new MazeSolverIterative();
-
-    /**
      * The {@link TypeLink} to {@link MazeSolverRecursive} used for context information.
      *
      * @return the {@link TypeLink} to {@link MazeSolverRecursive}.
@@ -85,6 +81,11 @@ public class H4_MazeSolverIterativeTest {
     public class NextStepTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new MazeSolverIterative();
+
+        /**
          * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
          * correctly.
          *
@@ -95,7 +96,7 @@ public class H4_MazeSolverIterativeTest {
          */
         private void assertNextStep(WorldProperties properties, Point p, DirectionVector d, DirectionVector expected) {
             MethodLink method = getMethod("nextStep");
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             DirectionVector actual = solver.nextStep(world, p, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -222,6 +223,11 @@ public class H4_MazeSolverIterativeTest {
     public class NumberOfStepsTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new TestNextStepWorld();
+
+        /**
          * Returns the method for context information.
          *
          * @return the method for context information
@@ -272,7 +278,7 @@ public class H4_MazeSolverIterativeTest {
             int expected
         ) {
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             int actual = solver.numberOfSteps(world, s, e, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -386,6 +392,11 @@ public class H4_MazeSolverIterativeTest {
     public class SolveTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new TestSolverWorld();
+
+        /**
          * Returns the method for context information.
          *
          * @return the method
@@ -452,7 +463,7 @@ public class H4_MazeSolverIterativeTest {
                 expected[i] = new Point(node.get(i).get("x").asInt(), node.get(i).get("y").asInt());
             }
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -498,7 +509,7 @@ public class H4_MazeSolverIterativeTest {
                 expected[i] = new Point(node.get(i).get("x").asInt(), node.get(i).get("y").asInt());
             }
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
             Context.Builder<?> context = contextBuilder().subject(method)
@@ -551,7 +562,7 @@ public class H4_MazeSolverIterativeTest {
             }
 
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
             for (int i = 1; i < expected.length - 1; i++) {
@@ -578,6 +589,46 @@ public class H4_MazeSolverIterativeTest {
             BasicMethodLink method = getMethod();
             Context context = contextBuilder().subject(method).build();
             assertIterative(method.getCtElement(), "MazeSolverIterative#solve(World, Point, Point, Direction)", context);
+        }
+    }
+
+    /**
+     * Used to make testing of implementation independent of next step.
+     */
+    @SkipCheck
+    private static class TestNextStepWorld extends MazeSolverIterative {
+
+        @Override
+        public DirectionVector nextStep(World world, Point p, DirectionVector d) {
+            DirectionVector next = TutorUtils.rotate270(d);
+            for (int i = 0; i < DirectionVector.values().length; i++) {
+                if (!world.isBlocked(p, next)) {
+                    return next;
+                }
+                next = TutorUtils.rotate90(next);
+            }
+            return d;
+        }
+    }
+
+    /**
+     * Used to make testing of implementation independent of the next step and number of steps.
+     */
+    @SkipCheck
+    private static class TestSolverWorld extends TestNextStepWorld {
+
+        @Override
+        public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
+            int steps = 0;
+            Point next = s;
+            DirectionVector nextDir = d;
+            while (!next.equals(e)) {
+                nextDir = nextStep(world, next, nextDir);
+                next = nextDir.getMovement(next);
+                steps++;
+            }
+            steps++;
+            return steps;
         }
     }
 }
