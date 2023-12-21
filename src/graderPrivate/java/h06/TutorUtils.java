@@ -22,9 +22,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.assertFalse;
@@ -239,7 +237,6 @@ public class TutorUtils {
             .list()
             .stream()
             .map(it -> it instanceof CtInvocation<?> ? ((CtInvocation<?>) it).getExecutable() : null)
-            .filter(Predicate.not(Objects::isNull))
             .toList();
         if (!method.filterChildren(it -> it instanceof CtLoop).list().isEmpty()) {
             return false;

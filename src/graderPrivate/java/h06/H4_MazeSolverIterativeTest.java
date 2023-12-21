@@ -491,7 +491,7 @@ public class H4_MazeSolverIterativeTest {
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
         @DisplayName("37 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Start- und Endpunkt "
-            + "enthält.")
+            + "korrekt enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
             "MazeSolver/solve/path_complex2.json",
@@ -510,28 +510,25 @@ public class H4_MazeSolverIterativeTest {
             }
             MethodLink method = getMethod();
             World world = properties.createWorld(TestWorld::new);
-            Point[] path = solver.solve(world, s, e, d);
-
-            Point actualStart = Arrays.stream(path).filter(p -> p.equals(s)).findFirst().orElse(null);
+            Point[] actual = solver.solve(world, s, e, d);
 
             Context.Builder<?> context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", e)
                 .add("d", d)
-                .add("Expected start", s)
-                .add("Actual start", actualStart);
+                .add("Expected", expected[0])
+                .add("Actual", actual[0]);
 
-            assertEquals(s, actualStart, context.build(),
+            assertEquals(expected[0], actual[0], context.build(),
                 result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the start point %s, but was %s"
-                    .formatted(world, s, e, d, s, actualStart));
+                    .formatted(world, s, e, d, expected[0], actual[0]));
 
-            Point actualEnd = Arrays.stream(path).filter(p -> p.equals(e)).findFirst().orElse(null);
-            context.add("Expected end", e)
-                .add("Actual end", actualEnd);
-            assertEquals(e, actualEnd, context.build(),
+            context.add("Expected", expected[expected.length - 1])
+                .add("Actual", actual[actual.length - 1]);
+            assertEquals(expected[0], actual[0], context.build(),
                 result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the end point %s, but was %s"
-                    .formatted(world, s, e, d, e, actualEnd));
+                    .formatted(world, s, e, d, expected[expected.length - 1], actual[actual.length - 1]));
         }
 
         /**
@@ -567,15 +564,8 @@ public class H4_MazeSolverIterativeTest {
             MethodLink method = getMethod();
             World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
-            int i = 0;
-            int end = actual.length - 1;
-            if (actual[i].equals(s)) {
-                i++;
-            }
-            if (actual[end].equals(e)) {
-                end--;
-            }
-            for (; i <= end; i++) {
+
+            for (int i = 1; i < expected.length - 1; i++) {
                 Context context = contextBuilder().subject(method)
                     .add(buildWorldContext(properties))
                     .add("s", s)

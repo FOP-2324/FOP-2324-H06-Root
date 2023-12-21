@@ -564,7 +564,8 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("21 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Startpunkt enthält.")
+        @DisplayName("21 | solve(World, Point, Point, Direction) gibt ein Array zurück, das die Startpunkt korrekt "
+            + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
             "MazeSolver/solve/path_complex2.json",
@@ -583,20 +584,20 @@ public class H3_MazeSolverRecursiveTest {
             }
             MethodLink method = getMethod();
             World world = properties.createWorld(TestWorld::new);
-            Point[] path = solver.solve(world, s, e, d);
-            Point actual = Arrays.stream(path).filter(p -> p.equals(s)).findFirst().orElse(null);
+            Point[] actual = solver.solve(world, s, e, d);
+
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", s)
                 .add("d", d)
-                .add("Expected", s)
-                .add("Actual", actual)
+                .add("Expected", expected[0])
+                .add("Actual", actual[0])
                 .build();
 
-            assertEquals(s, actual, context,
+            assertEquals(expected[0], actual[0], context,
                 result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the start point %s, but was %s."
-                    .formatted(world, s, e, d, s, actual));
+                    .formatted(world, s, e, d, expected[0], actual[0]));
         }
 
         /**
@@ -610,7 +611,8 @@ public class H3_MazeSolverRecursiveTest {
          * @param node       the expected array
          */
         @ParameterizedTest(name = "Startpunkt: {1}, Endpunkt: {2}, Richtung: {3}")
-        @DisplayName("22 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Endpunkt enthält.")
+        @DisplayName("22 | solve(World, Point, Point, Direction) gibt ein Array zurück, das den Endpunkt korrekt "
+            + "enthält.")
         @JsonClasspathSource(value = {
             "MazeSolver/solve/path_complex1.json",
             "MazeSolver/solve/path_complex2.json",
@@ -629,20 +631,20 @@ public class H3_MazeSolverRecursiveTest {
             }
             MethodLink method = getMethod();
             World world = properties.createWorld(TestWorld::new);
-            Point[] path = solver.solve(world, s, e, d);
-            Point actual = Arrays.stream(path).filter(p -> p.equals(e)).findFirst().orElse(null);
+            Point[] actual = solver.solve(world, s, e, d);
+
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
                 .add("s", s)
                 .add("e", s)
                 .add("d", d)
-                .add("Expected", e)
-                .add("Actual", actual)
+                .add("Expected", expected[expected.length - 1])
+                .add("Actual", actual[actual.length - 1])
                 .build();
 
-            assertEquals(e, actual, context,
+            assertEquals(expected[expected.length - 1], actual[actual.length - 1], context,
                 result -> "MazeSolverIterative#solve(%s, %s, %s, %s) should contain the end point %s, but was %s."
-                    .formatted(world, s, e, d, e, actual));
+                    .formatted(world, s, e, d, expected[expected.length - 1], actual[actual.length - 1]));
         }
 
         /**
@@ -679,15 +681,7 @@ public class H3_MazeSolverRecursiveTest {
             World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
-            int i = 0;
-            int end = actual.length - 1;
-            if (actual[i].equals(s)) {
-                i++;
-            }
-            if (actual[end].equals(e)) {
-                end--;
-            }
-            for (; i <= end; i++) {
+            for (int i = 1; i < expected.length - 1; i++) {
                 Context context = contextBuilder().subject(method)
                     .add(buildWorldContext(properties))
                     .add("s", s)
