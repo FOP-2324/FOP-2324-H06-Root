@@ -49,14 +49,14 @@ public class MazeSolverRecursive implements MazeSolver {
     }
 
     /**
-     * Helper method for solve. Computes the path from p to end.
+     * Helper method for solving. Computes the path from p to end.
      *
      * @param world the world to solve the maze in
      * @param p     the current point
      * @param e     the end point
      * @param d     the current direction
      * @param path  the path calculated so far from s to p
-     * @param index the index of the next free spot in path
+     * @param index the index of the next free spot in a path
      */
     @StudentImplementationRequired
     private void solveHelper(World world, Point p, Point e, DirectionVector d, Point[] path, int index) {

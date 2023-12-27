@@ -1,8 +1,8 @@
 package h06;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import h06.mock.TestWorld;
 import h06.problems.MazeSolver;
-import h06.problems.MazeSolverIterative;
 import h06.problems.MazeSolverRecursive;
 import h06.world.DirectionVector;
 import h06.world.World;
@@ -64,11 +64,6 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
 public class H3_MazeSolverRecursiveTest {
 
     /**
-     * The {@link MazeSolver} to test.
-     */
-    private final MazeSolver solver = new MazeSolverIterative();
-
-    /**
      * The {@link TypeLink} to {@link MazeSolverRecursive} used for context information.
      *
      * @return the {@link TypeLink} to {@link MazeSolverRecursive}.
@@ -95,6 +90,11 @@ public class H3_MazeSolverRecursiveTest {
     public class NextStepTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new MazeSolverRecursive();
+
+        /**
          * Tests whether {@link MazeSolverRecursive#nextStep(World, Point, DirectionVector)} computes the next step
          * correctly.
          *
@@ -105,7 +105,7 @@ public class H3_MazeSolverRecursiveTest {
          */
         private void assertNextStep(WorldProperties properties, Point p, DirectionVector d, DirectionVector expected) {
             MethodLink method = getMethod("nextStep");
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             DirectionVector actual = solver.nextStep(world, p, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -268,6 +268,11 @@ public class H3_MazeSolverRecursiveTest {
     public class NumberOfStepsTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new TestNextStepWorld();
+
+        /**
          * Returns the method for context information.
          *
          * @return the method for context information
@@ -346,7 +351,7 @@ public class H3_MazeSolverRecursiveTest {
          */
         private void assertNumberOfSteps(WorldProperties properties, Point s, Point e, DirectionVector d, int expected) {
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             int actual = solver.numberOfSteps(world, s, e, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -461,6 +466,11 @@ public class H3_MazeSolverRecursiveTest {
     public class SolveTest {
 
         /**
+         * The {@link MazeSolver} to test.
+         */
+        private final MazeSolver solver = new TestSolverWorld();
+
+        /**
          * Returns the method for context information.
          *
          * @return the method
@@ -527,7 +537,7 @@ public class H3_MazeSolverRecursiveTest {
                 expected[i] = new Point(node.get(i).get("x").asInt(), node.get(i).get("y").asInt());
             }
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
             Context context = contextBuilder().subject(method)
                 .add(buildWorldContext(properties))
@@ -573,7 +583,7 @@ public class H3_MazeSolverRecursiveTest {
                 expected[i] = new Point(node.get(i).get("x").asInt(), node.get(i).get("y").asInt());
             }
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
             Context context = contextBuilder().subject(method)
@@ -620,7 +630,7 @@ public class H3_MazeSolverRecursiveTest {
                 expected[i] = new Point(node.get(i).get("x").asInt(), node.get(i).get("y").asInt());
             }
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
             Context context = contextBuilder().subject(method)
@@ -668,7 +678,7 @@ public class H3_MazeSolverRecursiveTest {
             }
 
             MethodLink method = getMethod();
-            World world = properties.createWorld();
+            World world = properties.createWorld(TestWorld::new);
             Point[] actual = solver.solve(world, s, e, d);
 
             for (int i = 1; i < expected.length - 1; i++) {
@@ -696,6 +706,36 @@ public class H3_MazeSolverRecursiveTest {
             Context context = contextBuilder().subject(method)
                 .build();
             assertRecursive(method.getCtElement(), "MazeSolverRecursive#solve(World, Point, Point, Direction))", context);
+        }
+    }
+
+    /**
+     * Used to make testing of implementation independent of next step.
+     */
+    @SkipCheck
+    private static class TestNextStepWorld extends MazeSolverRecursive {
+
+        @Override
+        public DirectionVector nextStep(World world, Point p, DirectionVector d) {
+            return !world.isBlocked(p, TutorUtils.rotate270(d))
+                ? TutorUtils.rotate270(d) :
+                nextStep(world, p, TutorUtils.rotate90(d));
+        }
+    }
+
+    /**
+     * Used to make testing of implementation independent of the next step and number of steps.
+     */
+    @SkipCheck
+    private static class TestSolverWorld extends TestNextStepWorld {
+
+        @Override
+        public int numberOfSteps(World world, Point s, Point e, DirectionVector d) {
+            if (s.equals(e)) {
+                return 1;
+            }
+            DirectionVector next = nextStep(world, s, d);
+            return 1 + numberOfSteps(world, next.getMovement(s), e, next);
         }
     }
 }
