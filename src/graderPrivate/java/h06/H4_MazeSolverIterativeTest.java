@@ -24,13 +24,15 @@ import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtInvocation;
-import spoon.reflect.code.CtLocalVariable;
+import spoon.reflect.declaration.CtField;
+import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.reference.CtExecutableReference;
 
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static h06.TutorUtils.assertIterative;
 import static h06.TutorUtils.buildWorldContext;
@@ -245,19 +247,23 @@ public class H4_MazeSolverIterativeTest {
         @Test
         public void testCounterVariable() {
             BasicMethodLink method = getMethod();
-            List<CtLocalVariable<?>> variables = method.getCtElement()
-                .filterChildren(it -> it instanceof CtLocalVariable<?>)
-                .list();
-            List<CtLocalVariable<?>> found = variables.stream()
+            List<CtVariable<?>> variables = Stream.concat(
+                    method.getCtElement().getParent().filterChildren(it -> it instanceof CtField<?>)
+                        .<CtVariable<?>>list()
+                        .stream(),
+                    method.getCtElement().filterChildren(it -> it instanceof CtVariable<?>)
+                        .<CtVariable<?>>list()
+                        .stream()
+                )
                 .filter(it -> it.getType().getActualClass().equals(int.class))
                 .toList();
             Context context = contextBuilder().subject(method)
                 .add("Local variables", variables)
                 .build();
             assertFalse(
-                found.isEmpty(), context,
+                variables.isEmpty(), context,
                 result -> "numberOfSteps(World, Point, Point, Direction) should at least contain one local variable "
-                    + "for computing the total number of steps, found %s".formatted(found.size()));
+                    + "for computing the total number of steps, found %s".formatted(variables));
         }
 
         /**

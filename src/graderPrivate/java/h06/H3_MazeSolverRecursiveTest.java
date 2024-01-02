@@ -23,12 +23,14 @@ import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
 import spoon.reflect.code.CtAbstractInvocation;
+import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtBinaryOperator;
 import spoon.reflect.code.CtConditional;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtLiteral;
 import spoon.reflect.code.CtReturn;
+import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.reference.CtExecutableReference;
 
 import java.awt.Point;
@@ -221,20 +223,22 @@ public class H3_MazeSolverRecursiveTest {
         @DisplayName("13 | Verbindliche Anforderungen")
         @Test
         public void testRequirements() {
-            TypeLink type = getTypeLink(Package.WORLD, DirectionVector.class);
-            BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
+         BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
             Context context = contextBuilder().subject(method).build();
-
+            int conds = method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().size();
+            assertEquals(1, conds, context,
+                result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
+                    + "conditional statement, but found %s".formatted(conds));
             List<CtReturn<?>> returns = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
                 .list();
-            boolean found = false;
-            for (CtReturn<?> ret : returns) {
-                if (ret.getReturnedExpression() instanceof CtConditional<?> expression) {
-                    found = true;
-                    break;
-                }
-            }
-            assertTrue(found, context,
+            CtExpression<?> expression = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
+                .<CtReturn<?>>list().get(0).getReturnedExpression();
+            boolean condRet = expression instanceof CtConditional<?>;
+            boolean condAndVarRead = expression instanceof CtVariableRead<?>
+                && !method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().isEmpty();
+            boolean condAndAssign = expression instanceof CtAssignment<?, ?> assignment
+                && assignment.getAssignment() instanceof CtConditional<?>;
+            assertTrue(condRet || condAndVarRead || condAndAssign, context,
                 result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
                     + "conditional statement, but found %s"
                     .formatted(returns.stream().map(CtReturn::getReturnedExpression).toList()));
