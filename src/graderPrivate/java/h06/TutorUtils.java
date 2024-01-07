@@ -257,7 +257,7 @@ public class TutorUtils {
         List<? extends CtExecutableReference<?>> calls,
         Set<CtExecutableReference<?>> visited
     ) {
-        if (calls.stream().anyMatch(it -> it.getSimpleName().equals(method.getSimpleName()))) {
+        if (calls.stream().anyMatch(m -> m.getSimpleName().equals(method.getSimpleName()))) {
             return true;
         }
         for (CtExecutableReference<?> call : calls) {
@@ -265,10 +265,10 @@ public class TutorUtils {
                 .list()
                 .stream()
                 .map(it -> it instanceof CtInvocation<?> ? ((CtInvocation<?>) it).getExecutable() : null)
-                .filter(it -> !visited.contains(it))
+                .filter(m -> !visited.contains(m))
                 .peek(visited::add)
                 .toList();
-            if (newCalls.stream().anyMatch(it -> !it.filterChildren(it2 -> it2 instanceof CtLoop).list().isEmpty())) {
+            if (newCalls.stream().anyMatch(m -> !m.filterChildren(statement -> statement instanceof CtLoop).list().isEmpty())) {
                 return false;
             }
             return isRecursive(method, newCalls, visited);
