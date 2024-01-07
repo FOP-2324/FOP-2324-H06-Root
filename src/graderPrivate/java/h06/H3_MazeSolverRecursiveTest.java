@@ -701,7 +701,7 @@ public class H3_MazeSolverRecursiveTest {
         @DisplayName("24 | Verbindliche Anforderungen")
         @Test
         public void testRequirements() {
-            BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfSteps"));
+            BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("solve"));
             Context context = contextBuilder().subject(method)
                 .build();
             assertRecursive(method.getCtElement(), "MazeSolverRecursive#solve(World, Point, Point, Direction))", context);

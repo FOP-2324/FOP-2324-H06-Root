@@ -273,7 +273,7 @@ public class TutorUtils {
             }
             return isRecursive(method, newCalls, visited);
         }
-        return false;
+        return true;
     }
 
     /**
