@@ -11,7 +11,6 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
@@ -19,6 +18,7 @@ import org.opentest4j.AssertionFailedError;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import org.tudalgo.algoutils.tutor.general.annotation.SkipAfterFirstFailedTest;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
+import org.tudalgo.algoutils.tutor.general.match.BasicStringMatchers;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
@@ -36,7 +36,6 @@ import spoon.reflect.reference.CtExecutableReference;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -218,10 +217,12 @@ public class H3_MazeSolverRecursiveTest {
         @DisplayName("13 | Verbindliche Anforderungen")
         @Test
         public void testRequirements() {
-         BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
-            Context context = contextBuilder().subject(method).build();
+            BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
+            Context.Builder<?> context = contextBuilder().subject(method);
             int conds = method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().size();
-            assertEquals(1, conds, context,
+
+
+            assertEquals(1, conds, context.build(),
                 result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
                     + "conditional statement, but found %s".formatted(conds));
             List<CtReturn<?>> returns = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
@@ -233,11 +234,11 @@ public class H3_MazeSolverRecursiveTest {
                 && !method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().isEmpty();
             boolean condAndAssign = expression instanceof CtAssignment<?, ?> assignment
                 && assignment.getAssignment() instanceof CtConditional<?>;
-            assertTrue(condRet || condAndVarRead || condAndAssign, context,
+
+            assertTrue(condRet || condAndVarRead || condAndAssign, context.build(),
                 result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
                     + "conditional statement, but found %s"
                     .formatted(returns.stream().map(CtReturn::getReturnedExpression).toList()));
-
             List<? extends CtExecutableReference<?>> calls = method.getCtElement()
                 .filterChildren(it -> it instanceof CtInvocation<?>)
                 .list()
@@ -252,10 +253,14 @@ public class H3_MazeSolverRecursiveTest {
                         && !name.equals("rotate270");
                 })
                 .toList();
-            assertTrue(calls.isEmpty(), context,
+            assertTrue(calls.isEmpty(), context.build(),
                 result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should not contain any "
                     + "invocations, but found %s".formatted(calls));
-            assertRecursive(method.getCtElement(), "MazeSolverRecursive#nextStep(World, Point, DirectionVector)", context);
+            assertRecursive(method, "MazeSolverRecursive#nextStep(World, Point, DirectionVector)", context,
+                BasicStringMatchers.identical("rotate270"),
+                BasicStringMatchers.identical("rotate90"),
+                BasicStringMatchers.identical("isBlocked")
+            );
         }
     }
 
@@ -451,9 +456,13 @@ public class H3_MazeSolverRecursiveTest {
         @Test
         public void testRequirements() {
             BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("numberOfSteps"));
-            Context context = contextBuilder().subject(method)
-                .build();
-            assertRecursive(method.getCtElement(), "MazeSolverRecursive#numberOfSteps(World, Point, Point)", context);
+            Context.Builder<?> context = contextBuilder().subject(method);
+            assertRecursive(method, "MazeSolverRecursive#numberOfSteps(World, Point, Point)", context,
+                BasicStringMatchers.identical("equals"),
+                BasicStringMatchers.identical("nextStep"),
+                BasicStringMatchers.identical("getMovement"),
+                BasicStringMatchers.identical("from")
+            );
         }
     }
 
@@ -701,10 +710,15 @@ public class H3_MazeSolverRecursiveTest {
         @DisplayName("24 | Verbindliche Anforderungen")
         @Test
         public void testRequirements() {
-            BasicMethodLink method = ((BasicMethodLink) H3_MazeSolverRecursiveTest.this.getMethod("solve"));
-            Context context = contextBuilder().subject(method)
-                .build();
-            assertRecursive(method.getCtElement(), "MazeSolverRecursive#solve(World, Point, Point, Direction))", context);
+            BasicMethodLink method = getMethod();
+            Context.Builder<?> context = contextBuilder().subject(method);
+            assertRecursive(method, "MazeSolverRecursive#solve(World, Point, Point, Direction))", context,
+                BasicStringMatchers.identical("equals"),
+                BasicStringMatchers.identical("numberOfSteps"),
+                BasicStringMatchers.identical("nextStep"),
+                BasicStringMatchers.identical("getMovement"),
+                BasicStringMatchers.identical("from")
+            );
         }
     }
 
