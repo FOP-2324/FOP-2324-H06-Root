@@ -32,11 +32,6 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
 @DisplayName("H2 | World")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @TestForSubmission
-@Timeout(
-    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
-    unit = TimeUnit.SECONDS,
-    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
-)
 @SkipAfterFirstFailedTest(TestConstants.SKIP_AFTER_FIRST_FAILED_TEST)
 public class H2_WorldTest {
 

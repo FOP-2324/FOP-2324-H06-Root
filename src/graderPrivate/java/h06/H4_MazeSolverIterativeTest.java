@@ -12,27 +12,29 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junitpioneer.jupiter.json.JsonClasspathSource;
 import org.junitpioneer.jupiter.json.Property;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import org.tudalgo.algoutils.tutor.general.annotation.SkipAfterFirstFailedTest;
 import org.tudalgo.algoutils.tutor.general.assertions.Context;
+import org.tudalgo.algoutils.tutor.general.match.BasicStringMatchers;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtInvocation;
-import spoon.reflect.code.CtLocalVariable;
+import spoon.reflect.declaration.CtField;
+import spoon.reflect.declaration.CtVariable;
 import spoon.reflect.reference.CtExecutableReference;
 
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static h06.TutorUtils.assertIterative;
+import static h06.TutorUtils.assertRecursive;
 import static h06.TutorUtils.buildWorldContext;
 import static h06.TutorUtils.getMethodLink;
 import static h06.TutorUtils.getTypeLink;
@@ -46,11 +48,6 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
 @DisplayName("H4 | MazeSolverIterative")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @TestForSubmission
-@Timeout(
-    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
-    unit = TimeUnit.SECONDS,
-    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
-)
 @SkipAfterFirstFailedTest(TestConstants.SKIP_AFTER_FIRST_FAILED_TEST)
 public class H4_MazeSolverIterativeTest {
 
@@ -213,8 +210,12 @@ public class H4_MazeSolverIterativeTest {
         @Test
         public void testRequirements() {
             BasicMethodLink method = ((BasicMethodLink) getMethod("nextStep"));
-            Context context = contextBuilder().subject(method).build();
-            assertIterative(method.getCtElement(), "MazeSolverIterative#nextStep(World, Point, DirectionVector)", context);
+            Context.Builder<?> context = contextBuilder().subject(method);
+            assertIterative(method, "MazeSolverIterative#nextStep(World, Point, DirectionVector)", context,
+                BasicStringMatchers.identical("rotate270"),
+                BasicStringMatchers.identical("rotate90"),
+                BasicStringMatchers.identical("isBlocked")
+            );
         }
     }
 
@@ -245,19 +246,23 @@ public class H4_MazeSolverIterativeTest {
         @Test
         public void testCounterVariable() {
             BasicMethodLink method = getMethod();
-            List<CtLocalVariable<?>> variables = method.getCtElement()
-                .filterChildren(it -> it instanceof CtLocalVariable<?>)
-                .list();
-            List<CtLocalVariable<?>> found = variables.stream()
+            List<CtVariable<?>> variables = Stream.concat(
+                    method.getCtElement().getParent().filterChildren(it -> it instanceof CtField<?>)
+                        .<CtVariable<?>>list()
+                        .stream(),
+                    method.getCtElement().filterChildren(it -> it instanceof CtVariable<?>)
+                        .<CtVariable<?>>list()
+                        .stream()
+                )
                 .filter(it -> it.getType().getActualClass().equals(int.class))
                 .toList();
             Context context = contextBuilder().subject(method)
                 .add("Local variables", variables)
                 .build();
             assertFalse(
-                found.isEmpty(), context,
+                variables.isEmpty(), context,
                 result -> "numberOfSteps(World, Point, Point, Direction) should at least contain one local variable "
-                    + "for computing the total number of steps, found %s".formatted(found.size()));
+                    + "for computing the total number of steps, found %s".formatted(variables));
         }
 
         /**
@@ -379,8 +384,13 @@ public class H4_MazeSolverIterativeTest {
         @Test
         public void testRequirements() {
             BasicMethodLink method = getMethod();
-            Context context = contextBuilder().subject(method).build();
-            assertIterative(method.getCtElement(), "MazeSolverIterative#numberOfSteps(World, Point, Point))", context);
+            Context.Builder<?> context = contextBuilder().subject(method);
+            assertIterative(method, "MazeSolverIterative#numberOfSteps(World, Point, Point)", context,
+                BasicStringMatchers.identical("equals"),
+                BasicStringMatchers.identical("nextStep"),
+                BasicStringMatchers.identical("getMovement"),
+                BasicStringMatchers.identical("from")
+            );
         }
     }
 
@@ -587,8 +597,14 @@ public class H4_MazeSolverIterativeTest {
         @Test
         public void testRequirements() {
             BasicMethodLink method = getMethod();
-            Context context = contextBuilder().subject(method).build();
-            assertIterative(method.getCtElement(), "MazeSolverIterative#solve(World, Point, Point, Direction)", context);
+            Context.Builder<?> context = contextBuilder().subject(method);
+            assertIterative(method, "MazeSolverIterative#solve(World, Point, Point, Direction))", context,
+                BasicStringMatchers.identical("equals"),
+                BasicStringMatchers.identical("numberOfSteps"),
+                BasicStringMatchers.identical("nextStep"),
+                BasicStringMatchers.identical("getMovement"),
+                BasicStringMatchers.identical("from")
+            );
         }
     }
 

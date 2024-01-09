@@ -16,9 +16,12 @@ import org.tudalgo.algoutils.tutor.general.assertions.Context;
 import org.tudalgo.algoutils.tutor.general.reflections.BasicMethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.MethodLink;
 import org.tudalgo.algoutils.tutor.general.reflections.TypeLink;
+import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtConditional;
+import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtReturn;
+import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtElement;
 
 import java.util.List;
@@ -39,11 +42,6 @@ import static org.tudalgo.algoutils.tutor.general.assertions.Assertions2.context
 @DisplayName("H1 | DirectionVector")
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @TestForSubmission
-@Timeout(
-    value = TestConstants.TEST_TIMEOUT_IN_SECONDS,
-    unit = TimeUnit.SECONDS,
-    threadMode = Timeout.ThreadMode.SEPARATE_THREAD
-)
 @SkipAfterFirstFailedTest(TestConstants.SKIP_AFTER_FIRST_FAILED_TEST)
 public class H1_DirectionVectorTest {
 
@@ -89,22 +87,18 @@ public class H1_DirectionVectorTest {
         @DisplayName("02 | Verbindliche Anforderungen")
         @Test
         public void testRequirements() {
-            TypeLink type = getTypeLink(Package.WORLD, DirectionVector.class);
             BasicMethodLink method = ((BasicMethodLink) getMethodLink(Package.WORLD, DirectionVector.class, "rotate270"));
             Context context = contextBuilder().subject(method).build();
-
-            List<CtReturn<?>> returns = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
-                .list();
-            boolean found = false;
-            for (CtReturn<?> ret : returns) {
-                if (ret.getReturnedExpression() instanceof CtConditional<?> expression) {
-                    found = true;
-                    break;
-                }
-            }
-            assertTrue(found, context,
-                result -> "DirectionVector#rotate270() should contain exactly one conditional statement, but found %s"
-                    .formatted(returns.stream().map(CtReturn::getReturnedExpression).toList()));
+            CtExpression<?> expression = method.getCtElement().filterChildren(it -> it instanceof CtReturn<?>)
+                .<CtReturn<?>>list().get(0).getReturnedExpression();
+            boolean condRet = expression instanceof CtConditional<?>;
+            boolean condAndVarRead = expression instanceof CtVariableRead<?>
+                && !method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().isEmpty();
+            boolean condAndAssign = expression instanceof CtAssignment<?, ?> assignment
+                && assignment.getAssignment() instanceof CtConditional<?>;
+            assertTrue(condRet || condAndVarRead || condAndAssign, context,
+                result -> "DirectionVector#rotate270() should contain exactly one conditional statement, but found none"
+            );
         }
     }
 
