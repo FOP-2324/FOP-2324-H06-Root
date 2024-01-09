@@ -7,6 +7,12 @@ plugins {
 
 version = file("version").readLines().first()
 
+configurations.all {
+    resolutionStrategy {
+        force("org.junit-pioneer:junit-pioneer:1.7.1")
+    }
+}
+
 jagr {
     assignmentId.set("h06")
     submissions {

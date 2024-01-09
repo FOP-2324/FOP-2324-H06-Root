@@ -234,6 +234,7 @@ public class H3_MazeSolverRecursiveTest {
                 && !method.getCtElement().filterChildren(it -> it instanceof CtConditional<?>).list().isEmpty();
             boolean condAndAssign = expression instanceof CtAssignment<?, ?> assignment
                 && assignment.getAssignment() instanceof CtConditional<?>;
+
             assertTrue(condRet || condAndVarRead || condAndAssign, context.build(),
                 result -> "MazeSolverRecursive#nextStep(World, Point, DirectionVector) should contain exactly one "
                     + "conditional statement, but found %s"
